@@ -266,6 +266,24 @@
             .content {
                 padding: 15px;
             }
+            /* FIX: Target the inline flex wrapper div inside filter-section and stack vertically */
+            .filter-section > div[style*="display: flex"] {
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 10px !important;
+                align-items: stretch !important;
+                margin-bottom: 15px !important;
+            }
+            #searchInput {
+                width: 100% !important;
+                display: block !important;
+                flex: none !important;
+            }
+            #statusFilter {
+                width: 100% !important;
+                min-width: 100% !important;
+                display: block !important;
+            }
             /* Fix button container layout */
             .content > div:has(> .add-btn) {
                 display: flex;
