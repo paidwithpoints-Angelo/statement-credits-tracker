@@ -164,51 +164,8 @@
             padding: 40px;
             font-style: italic;
         }
-        @media (max-width: 768px) {
-            .results-table {
-                font-size: 12px;
-            }
-            .results-table th {
-                padding: 8px;
-                font-size: 12px;
-            }
-            .results-table td {
-                padding: 8px;
-                font-size: 12px;
-            }
-            .results-table th:nth-child(n+5),
-            .results-table td:nth-child(n+5) {
-                display: none;
-            }
-        }
-        @media (max-width: 480px) {
-            .cards-table {
-                font-size: 12px;
-            }
-            .cards-table th {
-                padding: 8px;
-                font-size: 11px;
-            }
-            .cards-table td {
-                padding: 8px;
-            }
-            .cards-table input {
-                padding: 6px !important;
-                font-size: 12px !important;
-            }
-            .cards-table th:nth-child(4),
-            .cards-table td:nth-child(4) {
-                display: none;
-            }
-            .results-table th {
-                padding: 6px;
-                font-size: 11px;
-            }
-            .results-table td {
-                padding: 6px;
-                font-size: 11px;
-            }
-        }
+
+        /* TALLIES SECTION */
         .tallies-container {
             background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%);
             border: 2px solid #27ae60;
@@ -266,6 +223,7 @@
         </header>
         <div class="content">
             <div class="section-header">STEP 1: ADD YOUR CARDS</div>
+            
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                 <button class="add-btn" onclick="addCard()">+ Add Another Card</button>
                 <div style="display: flex; gap: 10px;">
@@ -273,13 +231,21 @@
                     <button style="padding: 12px 24px; background: #e74c3c; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 14px;" onclick="resetAllData()">🔄 Reset for New Year</button>
                 </div>
             </div>
+
             <div id="expirationModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
                 <div style="background: white; border-radius: 8px; padding: 2rem; max-width: 500px; width: 90%;">
                     <div style="font-weight: 600; font-size: 18px; margin-bottom: 1.5rem;">Credits Expiring Soon</div>
-                    <div id="expirationList" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 1.5rem; max-height: 400px; overflow-y: auto;"></div>
-                    <button onclick="closeExpirationModal()" style="width: 100%; padding: 10px; background: #ddd; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">Close</button>
+                    
+                    <div id="expirationList" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 1.5rem; max-height: 400px; overflow-y: auto;">
+                        <!-- Expiring credits will be populated here -->
+                    </div>
+                    
+                    <button onclick="closeExpirationModal()" style="width: 100%; padding: 10px; background: #ddd; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">
+                        Close
+                    </button>
                 </div>
             </div>
+
             <table class="cards-table">
                 <thead>
                     <tr>
@@ -290,9 +256,12 @@
                         <th style="width: 15%; text-align: right;">Action</th>
                     </tr>
                 </thead>
-                <tbody id="cardsBody"></tbody>
+                <tbody id="cardsBody">
+                </tbody>
             </table>
+
             <div class="section-header">STEP 2: SELECT MONTH</div>
+            
             <div class="month-select">
                 <label for="month">Month:</label>
                 <select id="month" onchange="updateResults()">
@@ -310,6 +279,7 @@
                     <option>December</option>
                 </select>
             </div>
+
             <div class="filter-section">
                 <strong>Credit Types:</strong><br><br>
                 <label><input type="checkbox" id="monthly" checked onchange="updateResults()"> Monthly</label>
@@ -317,6 +287,7 @@
                 <label><input type="checkbox" id="semiannual" checked onchange="updateResults()"> Semi-Annual</label>
                 <label><input type="checkbox" id="annual" checked onchange="updateResults()"> Annual</label>
             </div>
+
             <div class="filter-section" style="margin-top: 30px;">
                 <strong>Search & Filter:</strong><br><br>
                 <div style="display: flex; gap: 12px; margin-bottom: 15px; align-items: center;">
@@ -339,11 +310,13 @@
                                 <th style="text-align: center; padding: 8px; font-weight: 600;">Status</th>
                             </tr>
                         </thead>
-                        <tbody id="searchResultsBody"></tbody>
+                        <tbody id="searchResultsBody">
+                        </tbody>
                     </table>
                     <div id="searchResultsInfo" style="margin-top: 12px; font-size: 12px; color: #666; text-align: center;"></div>
                 </div>
             </div>
+
             <div class="tallies-container">
                 <div class="tallies-header">CREDIT TALLIES</div>
                 <div class="tallies-grid">
@@ -361,6 +334,7 @@
                     </div>
                 </div>
             </div>
+
             <div style="background: white; border: 0.5px solid #ddd; border-radius: 8px; padding: 1.25rem; margin-bottom: 30px;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
                     <div style="font-weight: 500; font-size: 15px;">Year-to-Date Progress</div>
@@ -371,34 +345,278 @@
                 </div>
                 <div style="font-size: 13px; color: #888;">$<span id="paceAmount">0</span> redeemed of $<span id="totalCredits">0</span> total annual credits</div>
             </div>
+
             <div style="margin: 30px 0; display: flex; gap: 10px;">
                 <button onclick="toggleView('credits')" id="creditsViewBtn" style="padding: 12px 24px; background: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">Credits by Month</button>
                 <button onclick="toggleView('summary')" id="summaryViewBtn" style="padding: 12px 24px; background: transparent; color: #3498db; border: 1px solid #3498db; border-radius: 4px; cursor: pointer; font-weight: 600;">Card Summary</button>
                 <button onclick="toggleView('history')" id="historyViewBtn" style="padding: 12px 24px; background: transparent; color: #3498db; border: 1px solid #3498db; border-radius: 4px; cursor: pointer; font-weight: 600;">Annual History</button>
             </div>
+
             <div class="results-container" id="creditsView">
                 <div class="results-header">YOUR AVAILABLE CREDITS</div>
                 <div id="resultsTable"></div>
             </div>
+
             <div id="summaryView" style="display: none;">
                 <div class="results-header">CARD SUMMARY</div>
-                <div id="summaryContainer" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-top: 20px;"></div>
+                <div id="summaryContainer" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-top: 20px;">
+                </div>
             </div>
+
             <div id="historyView" style="display: none;">
                 <div style="background: white; border: 0.5px solid #ddd; border-radius: 8px; padding: 1.25rem; margin-bottom: 20px;">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <div style="font-weight: 500; font-size: 16px;">View Credit History</div>
-                        <select id="yearSelector" onchange="generateAnnualHistory()" style="padding: 10px; border: 0.5px solid #ddd; border-radius: 4px; font-size: 14px;"></select>
+                        <select id="yearSelector" onchange="generateAnnualHistory()" style="padding: 10px; border: 0.5px solid #ddd; border-radius: 4px; font-size: 14px;">
+                        </select>
                     </div>
                 </div>
-                <div id="historyContainer" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px;"></div>
+                <div id="historyContainer" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px;">
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        const cardData = {"Chase": ["Sapphire Reserve", "Sapphire Preferred", "Sapphire Reserve for Business", "Southwest Rapid Rewards Priority", "United Quest", "United Explorer", "United Club Infinite", "Aeroplan", "IHG One Rewards Premier", "Ritz-Carlton", "Ink Business Preferred", "Southwest Rapid Rewards Performance Business", "United Business", "United Club Business", "IHG One Rewards Premier Business"], "American Express": ["Blue Cash Everyday", "Blue Cash Preferred", "Delta SkyMiles Platinum", "Delta SkyMiles Reserve", "Gold Card", "Green Card", "Hilton Honors Aspire", "Hilton Honors Surpass", "Marriott Bonvoy Brilliant", "Platinum Card", "Business Gold", "Business Platinum", "Delta SkyMiles Platinum Business", "Delta SkyMiles Reserve Business", "Hilton Honors Business", "Marriott Bonvoy Business"], "Capital One": ["Venture X Rewards", "Venture Rewards", "Venture X Business", "Venture Business"], "Citi": ["Citi Strata Premier", "Citi Strata Elite", "AAdvantage Executive", "Citi Prestige", "Citi Strata Premier Business", "AAdvantage Platinum Business", "AAdvantage Globe"], "Bilt": ["Bilt Obsidian", "Bilt Palladium"], "Bank of America": ["Premium Rewards", "Premium Rewards Elite"]};
-        const creditData = {"Chase": {"Sapphire Reserve": [{name: "Travel", amount: 300, freq: "Annual"}, {name: "Hotel (The Edit)", amount: 500, freq: "Annual"}, {name: "Hotel (Chase Travel)", amount: 250, freq: "Annual"}, {name: "Dining", amount: 300, freq: "Annual"}, {name: "StubHub/viagogo", amount: 300, freq: "Annual"}, {name: "Lyft", amount: 10, freq: "Monthly"}, {name: "Peloton", amount: 120, freq: "Annual"}, {name: "Apple TV+/Apple Music", amount: 250, freq: "Annual"}, {name: "Global Entry/TSA/NEXUS", amount: 120, freq: "Every 4 Years"}], "Sapphire Preferred": [{name: "Hotel (Chase Travel)", amount: 50, freq: "Annual"}], "Sapphire Reserve for Business": [{name: "Travel", amount: 300, freq: "Annual"}, {name: "Hotel (The Edit)", amount: 500, freq: "Annual"}, {name: "Hotel (Chase Travel)", amount: 250, freq: "Annual"}, {name: "ZipRecruiter", amount: 400, freq: "Annual"}, {name: "Google Workspace", amount: 200, freq: "Annual"}, {name: "Giftcards.com", amount: 100, freq: "Annual"}, {name: "Lyft", amount: 120, freq: "Annual"}, {name: "DoorDash", amount: 300, freq: "Annual"}, {name: "Global Entry/TSA/NEXUS", amount: 120, freq: "Every 4 Years"}], "Southwest Rapid Rewards Priority": [{name: "Southwest Travel", amount: 75, freq: "Annual"}], "United Quest": [{name: "United Travel", amount: 200, freq: "Annual"}], "United Explorer": [{name: "Global Entry/TSA/NEXUS", amount: 120, freq: "Every 4 Years"}], "United Club Infinite": [{name: "Global Entry/TSA/NEXUS", amount: 120, freq: "Every 4 Years"}], "Aeroplan": [{name: "Global Entry/TSA/NEXUS", amount: 120, freq: "Every 4 Years"}], "IHG One Rewards Premier": [{name: "United TravelBank", amount: 100, freq: "Annual"}], "Ritz-Carlton": [{name: "Airline Incidental", amount: 300, freq: "Annual"}], "Ink Business Preferred": [{name: "Global Entry/TSA PreCheck", amount: 120, freq: "Every 4 Years"}, {name: "Hotel (Premier Collection)", amount: 100, freq: "Annual"}], "Southwest Rapid Rewards Performance Business": [{name: "Global Entry/TSA PreCheck", amount: 120, freq: "Every 4 Years"}, {name: "WiFi", amount: 70, freq: "Annual"}], "United Business": [{name: "United Travel", amount: 125, freq: "Annual"}, {name: "Global Entry/TSA/NEXUS", amount: 120, freq: "Every 4 Years"}], "United Club Business": [{name: "Global Entry/TSA/NEXUS", amount: 120, freq: "Every 4 Years"}], "IHG One Rewards Premier Business": [{name: "United TravelBank", amount: 100, freq: "Annual"}]}, "American Express": {"Blue Cash Everyday": [{name: "Disney Bundle", amount: 7, freq: "Monthly"}], "Blue Cash Preferred": [{name: "Disney Bundle", amount: 10, freq: "Monthly"}, {name: "Streaming", amount: 10, freq: "Monthly"}], "Delta SkyMiles Platinum": [{name: "Dining", amount: 10, freq: "Monthly"}, {name: "Uber One", amount: 10, freq: "Monthly"}, {name: "Delta Stays", amount: 100, freq: "Annual"}], "Delta SkyMiles Reserve": [{name: "Airline Fee", amount: 250, freq: "Annual"}, {name: "Hotel Delta Stays", amount: 250, freq: "Annual"}], "Gold Card": [{name: "Dining", amount: 10, freq: "Monthly"}, {name: "Uber/Uber Eats", amount: 10, freq: "Monthly"}, {name: "Grubhub", amount: 10, freq: "Monthly"}, {name: "Dunkin", amount: 7, freq: "Monthly"}, {name: "Resy", amount: 50, freq: "Quarterly"}], "Green Card": [{name: "CLEAR Plus", amount: 209, freq: "Annual"}], "Hilton Honors Aspire": [{name: "Resort", amount: 200, freq: "Semi-Annual"}, {name: "Flight", amount: 50, freq: "Quarterly"}, {name: "CLEAR+", amount: 209, freq: "Annual"}, {name: "Property Credit (Waldorf/Conrad)", amount: 100, freq: "Annual"}], "Hilton Honors Surpass": [{name: "Hotel", amount: 50, freq: "Quarterly"}], "Marriott Bonvoy Brilliant": [{name: "Dining", amount: 25, freq: "Monthly"}, {name: "Free Night Award", amount: 85000, freq: "Annual"}, {name: "Property Credit", amount: 100, freq: "Annual"}], "Platinum Card": [{name: "Uber Cash", amount: 15, freq: "Monthly"}, {name: "Streaming", amount: 25, freq: "Monthly"}, {name: "Digital Entertainment", amount: 25, freq: "Monthly"}, {name: "Airline Fee", amount: 200, freq: "Annual"}, {name: "CLEAR+", amount: 209, freq: "Annual"}, {name: "Hotel", amount: 300, freq: "Semi-Annual"}, {name: "Resy Dining", amount: 100, freq: "Quarterly"}, {name: "Lululemon", amount: 75, freq: "Quarterly"}, {name: "Oura Ring", amount: 200, freq: "Annual"}, {name: "Equinox+", amount: 300, freq: "Annual"}, {name: "Saks Fifth Avenue", amount: 50, freq: "Semi-Annual"}, {name: "Walmart+", amount: 155, freq: "Annual"}], "Business Gold": [{name: "Dining (US)", amount: 120, freq: "Annual"}, {name: "Internet/Cable/Phone", amount: 120, freq: "Annual"}, {name: "Shipping", amount: 20, freq: "Monthly"}], "Business Platinum": [{name: "Uber", amount: 15, freq: "Monthly"}, {name: "Resy Dining", amount: 150, freq: "Semi-Annual"}, {name: "Digital Entertainment", amount: 25, freq: "Monthly"}, {name: "Hilton", amount: 50, freq: "Quarterly"}, {name: "Airline Fee", amount: 200, freq: "Annual"}, {name: "Wireless", amount: 10, freq: "Monthly"}, {name: "CLEAR+", amount: 209, freq: "Annual"}, {name: "Hotel Collection", amount: 100, freq: "Annual"}, {name: "Dell", amount: 150, freq: "Annual"}, {name: "Global Entry/TSA", amount: 120, freq: "Every 4 Years"}], "Delta SkyMiles Platinum Business": [{name: "Dining", amount: 10, freq: "Monthly"}, {name: "Ride-sharing", amount: 10, freq: "Monthly"}], "Delta SkyMiles Reserve Business": [{name: "Airline Fee", amount: 250, freq: "Annual"}, {name: "Hotel Delta Stays", amount: 250, freq: "Annual"}, {name: "Resy Dining", amount: 240, freq: "Annual"}], "Hilton Honors Business": [{name: "Hotel", amount: 60, freq: "Quarterly"}], "Marriott Bonvoy Business": [{name: "Free Night Award", amount: 50000, freq: "Annual"}, {name: "Airline Credit", amount: 50, freq: "Semi-Annual"}]}, "Capital One": {"Venture X Rewards": [{name: "Travel", amount: 300, freq: "Annual"}, {name: "Global Entry/TSA PreCheck", amount: 120, freq: "Every 4 Years"}, {name: "Anniversary Miles", amount: 100, freq: "Annual"}], "Venture Rewards": [{name: "Travel", amount: 250, freq: "Annual"}], "Venture X Business": [{name: "Travel", amount: 300, freq: "Annual"}, {name: "Global Entry/TSA PreCheck", amount: 120, freq: "Every 4 Years"}, {name: "Anniversary Miles", amount: 100, freq: "Annual"}], "Venture Business": [{name: "Business Travel", amount: 50, freq: "Annual"}, {name: "Advertising/Software", amount: 50, freq: "Annual"}, {name: "Global Entry/TSA PreCheck", amount: 120, freq: "Every 4 Years"}]}, "Citi": {"Citi Strata Premier": [{name: "Hotel", amount: 100, freq: "Annual"}], "Citi Strata Elite": [{name: "Hotel", amount: 300, freq: "Annual"}, {name: "Splurge Credit", amount: 200, freq: "Annual"}, {name: "Blacklane", amount: 200, freq: "Annual"}, {name: "Global Entry/TSA PreCheck", amount: 120, freq: "Every 4 Years"}, {name: "Citigold Relationship", amount: 145, freq: "Annual"}, {name: "Citigold Private Client", amount: 595, freq: "Annual"}], "AAdvantage Executive": [{name: "Airline Fee", amount: 250, freq: "Annual"}, {name: "Grubhub", amount: 120, freq: "Annual"}, {name: "Lyft", amount: 120, freq: "Annual"}, {name: "Car Rental (Avis/Budget)", amount: 120, freq: "Annual"}, {name: "Global Entry/TSA PreCheck", amount: 120, freq: "Every 4 Years"}], "Citi Prestige": [{name: "Travel", amount: 250, freq: "Annual"}, {name: "Global Entry/TSA PreCheck", amount: 120, freq: "Every 4 Years"}], "Citi Strata Premier Business": [{name: "Hotel", amount: 100, freq: "Annual"}], "AAdvantage Platinum Business": [{name: "Airline Fee", amount: 100, freq: "Annual"}], "AAdvantage Globe": [{name: "Hotel", amount: 300, freq: "Annual"}, {name: "Splurge", amount: 100, freq: "Annual"}]}, "Bilt": {"Bilt Obsidian": [{name: "Hotel (BILT)", amount: 50, freq: "Semi-Annual"}], "Bilt Palladium": [{name: "Hotel (BILT)", amount: 200, freq: "Semi-Annual"}]}, "Bank of America": {"Premium Rewards": [{name: "Airline Incidental", amount: 100, freq: "Annual"}, {name: "Global Entry/TSA PreCheck", amount: 100, freq: "Every 4 Years"}], "Premium Rewards Elite": [{name: "Airline Incidental", amount: 300, freq: "Annual"}, {name: "Lifestyle (Food/Streaming/Fitness)", amount: 150, freq: "Annual"}, {name: "Global Entry/TSA PreCheck", amount: 120, freq: "Every 4 Years"}]}};
+        const cardData = {
+            "Chase": ["Sapphire Reserve", "Sapphire Preferred", "Sapphire Reserve for Business", "Southwest Rapid Rewards Priority", "United Quest", "United Explorer", "United Club Infinite", "Aeroplan", "IHG One Rewards Premier", "Ritz-Carlton", "Ink Business Preferred", "Southwest Rapid Rewards Performance Business", "United Business", "United Club Business", "IHG One Rewards Premier Business"],
+            "American Express": ["Blue Cash Everyday", "Blue Cash Preferred", "Delta SkyMiles Platinum", "Delta SkyMiles Reserve", "Gold Card", "Green Card", "Hilton Honors Aspire", "Hilton Honors Surpass", "Marriott Bonvoy Brilliant", "Platinum Card", "Business Gold", "Business Platinum", "Delta SkyMiles Platinum Business", "Delta SkyMiles Reserve Business", "Hilton Honors Business", "Marriott Bonvoy Business"],
+            "Capital One": ["Venture X Rewards", "Venture Rewards", "Venture X Business", "Venture Business"],
+            "Citi": ["Citi Strata Premier", "Citi Strata Elite", "AAdvantage Executive", "Citi Prestige", "Citi Strata Premier Business", "AAdvantage Platinum Business", "AAdvantage Globe"],
+            "Bilt": ["Bilt Obsidian", "Bilt Palladium"],
+            "Bank of America": ["Premium Rewards", "Premium Rewards Elite"]
+        };
+
+        const creditData = {
+            "Chase": {
+                "Sapphire Reserve": [
+                    { name: "Travel", amount: 300, freq: "Annual" },
+                    { name: "Hotel (The Edit)", amount: 500, freq: "Annual" },
+                    { name: "Hotel (Chase Travel)", amount: 250, freq: "Annual" },
+                    { name: "Dining", amount: 300, freq: "Annual" },
+                    { name: "StubHub/viagogo", amount: 300, freq: "Annual" },
+                    { name: "Lyft", amount: 10, freq: "Monthly" },
+                    { name: "Peloton", amount: 120, freq: "Annual" },
+                    { name: "Apple TV+/Apple Music", amount: 250, freq: "Annual" },
+                    { name: "Global Entry/TSA/NEXUS", amount: 120, freq: "Every 4 Years" }
+                ],
+                "Sapphire Preferred": [
+                    { name: "Hotel (Chase Travel)", amount: 50, freq: "Annual" }
+                ],
+                "Sapphire Reserve for Business": [
+                    { name: "Travel", amount: 300, freq: "Annual" },
+                    { name: "Hotel (The Edit)", amount: 500, freq: "Annual" },
+                    { name: "Hotel (Chase Travel)", amount: 250, freq: "Annual" },
+                    { name: "ZipRecruiter", amount: 400, freq: "Annual" },
+                    { name: "Google Workspace", amount: 200, freq: "Annual" },
+                    { name: "Giftcards.com", amount: 100, freq: "Annual" },
+                    { name: "Lyft", amount: 120, freq: "Annual" },
+                    { name: "DoorDash", amount: 300, freq: "Annual" },
+                    { name: "Global Entry/TSA/NEXUS", amount: 120, freq: "Every 4 Years" }
+                ],
+                "Southwest Rapid Rewards Priority": [
+                    { name: "Southwest Travel", amount: 75, freq: "Annual" }
+                ],
+                "United Quest": [
+                    { name: "United Travel", amount: 200, freq: "Annual" }
+                ],
+                "United Explorer": [
+                    { name: "Global Entry/TSA/NEXUS", amount: 120, freq: "Every 4 Years" }
+                ],
+                "United Club Infinite": [
+                    { name: "Global Entry/TSA/NEXUS", amount: 120, freq: "Every 4 Years" }
+                ],
+                "Aeroplan": [
+                    { name: "Global Entry/TSA/NEXUS", amount: 120, freq: "Every 4 Years" }
+                ],
+                "IHG One Rewards Premier": [
+                    { name: "United TravelBank", amount: 100, freq: "Annual" }
+                ],
+                "Ritz-Carlton": [
+                    { name: "Airline Incidental", amount: 300, freq: "Annual" }
+                ],
+                "Ink Business Preferred": [
+                    { name: "Global Entry/TSA PreCheck", amount: 120, freq: "Every 4 Years" },
+                    { name: "Hotel (Premier Collection)", amount: 100, freq: "Annual" }
+                ],
+                "Southwest Rapid Rewards Performance Business": [
+                    { name: "Global Entry/TSA PreCheck", amount: 120, freq: "Every 4 Years" },
+                    { name: "WiFi", amount: 70, freq: "Annual" }
+                ],
+                "United Business": [
+                    { name: "United Travel", amount: 125, freq: "Annual" },
+                    { name: "Global Entry/TSA/NEXUS", amount: 120, freq: "Every 4 Years" }
+                ],
+                "United Club Business": [
+                    { name: "Global Entry/TSA/NEXUS", amount: 120, freq: "Every 4 Years" }
+                ],
+                "IHG One Rewards Premier Business": [
+                    { name: "United TravelBank", amount: 100, freq: "Annual" }
+                ]
+            },
+            "American Express": {
+                "Blue Cash Everyday": [
+                    { name: "Disney Bundle", amount: 7, freq: "Monthly" }
+                ],
+                "Blue Cash Preferred": [
+                    { name: "Disney Bundle", amount: 10, freq: "Monthly" },
+                    { name: "Streaming", amount: 10, freq: "Monthly" }
+                ],
+                "Delta SkyMiles Platinum": [
+                    { name: "Dining", amount: 10, freq: "Monthly" },
+                    { name: "Uber One", amount: 10, freq: "Monthly" },
+                    { name: "Delta Stays", amount: 100, freq: "Annual" }
+                ],
+                "Delta SkyMiles Reserve": [
+                    { name: "Airline Fee", amount: 250, freq: "Annual" },
+                    { name: "Hotel Delta Stays", amount: 250, freq: "Annual" }
+                ],
+                "Gold Card": [
+                    { name: "Dining", amount: 10, freq: "Monthly" },
+                    { name: "Uber/Uber Eats", amount: 10, freq: "Monthly" },
+                    { name: "Grubhub", amount: 10, freq: "Monthly" },
+                    { name: "Dunkin", amount: 7, freq: "Monthly" },
+                    { name: "Resy", amount: 50, freq: "Quarterly" }
+                ],
+                "Green Card": [
+                    { name: "CLEAR Plus", amount: 209, freq: "Annual" }
+                ],
+                "Hilton Honors Aspire": [
+                    { name: "Resort", amount: 200, freq: "Semi-Annual" },
+                    { name: "Flight", amount: 50, freq: "Quarterly" },
+                    { name: "CLEAR+", amount: 209, freq: "Annual" },
+                    { name: "Property Credit (Waldorf/Conrad)", amount: 100, freq: "Annual" }
+                ],
+                "Hilton Honors Surpass": [
+                    { name: "Hotel", amount: 50, freq: "Quarterly" }
+                ],
+                "Marriott Bonvoy Brilliant": [
+                    { name: "Dining", amount: 25, freq: "Monthly" },
+                    { name: "Free Night Award", amount: 85000, freq: "Annual" },
+                    { name: "Property Credit", amount: 100, freq: "Annual" }
+                ],
+                "Platinum Card": [
+                    { name: "Uber Cash", amount: 15, freq: "Monthly" },
+                    { name: "Streaming", amount: 25, freq: "Monthly" },
+                    { name: "Digital Entertainment", amount: 25, freq: "Monthly" },
+                    { name: "Airline Fee", amount: 200, freq: "Annual" },
+                    { name: "CLEAR+", amount: 209, freq: "Annual" },
+                    { name: "Hotel", amount: 300, freq: "Semi-Annual" },
+                    { name: "Resy Dining", amount: 100, freq: "Quarterly" },
+                    { name: "Lululemon", amount: 75, freq: "Quarterly" },
+                    { name: "Oura Ring", amount: 200, freq: "Annual" },
+                    { name: "Equinox+", amount: 300, freq: "Annual" },
+                    { name: "Saks Fifth Avenue", amount: 50, freq: "Semi-Annual" },
+                    { name: "Walmart+", amount: 155, freq: "Annual" }
+                ],
+                "Business Gold": [
+                    { name: "Dining (US)", amount: 120, freq: "Annual" },
+                    { name: "Internet/Cable/Phone", amount: 120, freq: "Annual" },
+                    { name: "Shipping", amount: 20, freq: "Monthly" }
+                ],
+                "Business Platinum": [
+                    { name: "Uber", amount: 15, freq: "Monthly" },
+                    { name: "Resy Dining", amount: 150, freq: "Semi-Annual" },
+                    { name: "Digital Entertainment", amount: 25, freq: "Monthly" },
+                    { name: "Hilton", amount: 50, freq: "Quarterly" },
+                    { name: "Airline Fee", amount: 200, freq: "Annual" },
+                    { name: "Wireless", amount: 10, freq: "Monthly" },
+                    { name: "CLEAR+", amount: 209, freq: "Annual" },
+                    { name: "Hotel Collection", amount: 100, freq: "Annual" },
+                    { name: "Dell", amount: 150, freq: "Annual" },
+                    { name: "Global Entry/TSA", amount: 120, freq: "Every 4 Years" }
+                ],
+                "Delta SkyMiles Platinum Business": [
+                    { name: "Dining", amount: 10, freq: "Monthly" },
+                    { name: "Ride-sharing", amount: 10, freq: "Monthly" }
+                ],
+                "Delta SkyMiles Reserve Business": [
+                    { name: "Airline Fee", amount: 250, freq: "Annual" },
+                    { name: "Hotel Delta Stays", amount: 250, freq: "Annual" },
+                    { name: "Resy Dining", amount: 240, freq: "Annual" }
+                ],
+                "Hilton Honors Business": [
+                    { name: "Hotel", amount: 60, freq: "Quarterly" }
+                ],
+                "Marriott Bonvoy Business": [
+                    { name: "Free Night Award", amount: 50000, freq: "Annual" },
+                    { name: "Airline Credit", amount: 50, freq: "Semi-Annual" }
+                ]
+            },
+            "Capital One": {
+                "Venture X Rewards": [
+                    { name: "Travel", amount: 300, freq: "Annual" },
+                    { name: "Global Entry/TSA PreCheck", amount: 120, freq: "Every 4 Years" },
+                    { name: "Anniversary Miles", amount: 100, freq: "Annual" }
+                ],
+                "Venture Rewards": [
+                    { name: "Travel", amount: 250, freq: "Annual" }
+                ],
+                "Venture X Business": [
+                    { name: "Travel", amount: 300, freq: "Annual" },
+                    { name: "Global Entry/TSA PreCheck", amount: 120, freq: "Every 4 Years" },
+                    { name: "Anniversary Miles", amount: 100, freq: "Annual" }
+                ],
+                "Venture Business": [
+                    { name: "Business Travel", amount: 50, freq: "Annual" },
+                    { name: "Advertising/Software", amount: 50, freq: "Annual" },
+                    { name: "Global Entry/TSA PreCheck", amount: 120, freq: "Every 4 Years" }
+                ]
+            },
+            "Citi": {
+                "Citi Strata Premier": [
+                    { name: "Hotel", amount: 100, freq: "Annual" }
+                ],
+                "Citi Strata Elite": [
+                    { name: "Hotel", amount: 300, freq: "Annual" },
+                    { name: "Splurge Credit", amount: 200, freq: "Annual" },
+                    { name: "Blacklane", amount: 200, freq: "Annual" },
+                    { name: "Global Entry/TSA PreCheck", amount: 120, freq: "Every 4 Years" },
+                    { name: "Citigold Relationship", amount: 145, freq: "Annual" },
+                    { name: "Citigold Private Client", amount: 595, freq: "Annual" }
+                ],
+                "AAdvantage Executive": [
+                    { name: "Airline Fee", amount: 250, freq: "Annual" },
+                    { name: "Grubhub", amount: 120, freq: "Annual" },
+                    { name: "Lyft", amount: 120, freq: "Annual" },
+                    { name: "Car Rental (Avis/Budget)", amount: 120, freq: "Annual" },
+                    { name: "Global Entry/TSA PreCheck", amount: 120, freq: "Every 4 Years" }
+                ],
+                "Citi Prestige": [
+                    { name: "Travel", amount: 250, freq: "Annual" },
+                    { name: "Global Entry/TSA PreCheck", amount: 120, freq: "Every 4 Years" }
+                ],
+                "Citi Strata Premier Business": [
+                    { name: "Hotel", amount: 100, freq: "Annual" }
+                ],
+                "AAdvantage Platinum Business": [
+                    { name: "Airline Fee", amount: 100, freq: "Annual" }
+                ],
+                "AAdvantage Globe": [
+                    { name: "Hotel", amount: 300, freq: "Annual" },
+                    { name: "Splurge", amount: 100, freq: "Annual" }
+                ]
+            },
+            "Bilt": {
+                "Bilt Obsidian": [
+                    { name: "Hotel (BILT)", amount: 50, freq: "Semi-Annual" }
+                ],
+                "Bilt Palladium": [
+                    { name: "Hotel (BILT)", amount: 200, freq: "Semi-Annual" }
+                ]
+            },
+            "Bank of America": {
+                "Premium Rewards": [
+                    { name: "Airline Incidental", amount: 100, freq: "Annual" },
+                    { name: "Global Entry/TSA PreCheck", amount: 100, freq: "Every 4 Years" }
+                ],
+                "Premium Rewards Elite": [
+                    { name: "Airline Incidental", amount: 300, freq: "Annual" },
+                    { name: "Lifestyle (Food/Streaming/Fitness)", amount: 150, freq: "Annual" },
+                    { name: "Global Entry/TSA PreCheck", amount: 120, freq: "Every 4 Years" }
+                ]
+            }
+        };
 
         let cardCount = 0;
 
@@ -407,7 +625,33 @@
             const tbody = document.getElementById('cardsBody');
             const row = document.createElement('tr');
             row.id = 'card-' + cardCount;
-            row.innerHTML = `<td><select onchange="saveCards(); updateResults();"><option value="">-- Bank --</option><option value="Chase">Chase</option><option value="American Express">AMEX</option><option value="Capital One">Capital One</option><option value="Citi">Citi</option><option value="Bilt">Bilt</option><option value="Bank of America">Bank of America</option></select></td><td><select onchange="saveCards(); updateResults();"><option value="">-- Card --</option></select></td><td><input type="text" placeholder="Nickname (optional)" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;" onchange="saveCards();"></td><td style="text-align: center;"><input type="number" placeholder="$0" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; text-align: center;" onchange="saveCards();" min="0"></td><td style="text-align: right;"><button class="remove-btn" onclick="removeCard('card-${cardCount}')">Remove</button></td>`;
+            row.innerHTML = `
+                <td>
+                    <select onchange="saveCards(); updateResults();">
+                        <option value="">-- Bank --</option>
+                        <option value="Chase">Chase</option>
+                        <option value="American Express">AMEX</option>
+                        <option value="Capital One">Capital One</option>
+                        <option value="Citi">Citi</option>
+                        <option value="Bilt">Bilt</option>
+                        <option value="Bank of America">Bank of America</option>
+                    </select>
+                </td>
+                <td>
+                    <select onchange="saveCards(); updateResults();">
+                        <option value="">-- Card --</option>
+                    </select>
+                </td>
+                <td>
+                    <input type="text" placeholder="Nickname (optional)" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;" onchange="saveCards();">
+                </td>
+                <td style="text-align: center;">
+                    <input type="number" placeholder="$0" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; text-align: center;" onchange="saveCards();" min="0">
+                </td>
+                <td style="text-align: right;">
+                    <button class="remove-btn" onclick="removeCard('card-${cardCount}')">Remove</button>
+                </td>
+            `;
             tbody.appendChild(row);
         }
 
@@ -427,7 +671,9 @@
                 const card = selects[1].value;
                 const nickname = inputs[0] ? inputs[0].value : '';
                 const annualFee = inputs[1] ? parseInt(inputs[1].value) || 0 : 0;
-                if (bank && card) cards.push({bank, card, nickname, annualFee});
+                if (bank && card) {
+                    cards.push({bank, card, nickname, annualFee});
+                }
             });
             localStorage.setItem('cards', JSON.stringify(cards));
         }
@@ -457,12 +703,14 @@
             const bank = selects[0].value;
             const cardSelect = selects[1];
             cardSelect.innerHTML = '<option value="">-- Card --</option>';
-            if (bank && cardData[bank]) cardData[bank].forEach(card => {
-                const option = document.createElement('option');
-                option.value = card;
-                option.textContent = card;
-                cardSelect.appendChild(option);
-            });
+            if (bank && cardData[bank]) {
+                cardData[bank].forEach(card => {
+                    const option = document.createElement('option');
+                    option.value = card;
+                    option.textContent = card;
+                    cardSelect.appendChild(option);
+                });
+            }
         }
 
         function updateResults() {
@@ -474,7 +722,9 @@
                 const bank = selects[0].value;
                 const card = selects[1].value;
                 const nickname = textInput ? textInput.value : '';
-                if (bank && card) cards.push({bank, card, nickname});
+                if (bank && card) {
+                    cards.push({bank, card, nickname});
+                }
             });
 
             if (cards.length === 0) {
@@ -483,7 +733,14 @@
                 return;
             }
 
-            const creditsByFreq = {'Monthly': [], 'Quarterly': [], 'Semi-Annual': [], 'Annual': []};
+            // Organize credits by frequency
+            const creditsByFreq = {
+                'Monthly': [],
+                'Quarterly': [],
+                'Semi-Annual': [],
+                'Annual': []
+            };
+
             cards.forEach(({bank, card, nickname}) => {
                 const credits = creditData[bank]?.[card] || [];
                 credits.forEach(credit => {
@@ -491,44 +748,199 @@
                     const quarterly = document.getElementById('quarterly').checked;
                     const semiannual = document.getElementById('semiannual').checked;
                     const annual = document.getElementById('annual').checked;
+
                     let show = false;
                     if (credit.freq === 'Monthly') show = monthly;
                     else if (credit.freq === 'Quarterly') show = quarterly;
                     else if (credit.freq === 'Semi-Annual') show = semiannual;
                     else if (credit.freq === 'Annual' || credit.freq === 'Every 4 Years') show = annual;
+
                     if (show) {
                         const displayName = nickname ? `${card} (${nickname})` : card;
-                        const creditObj = {bank, card, displayName, name: credit.name, amount: credit.amount, freq: credit.freq};
-                        if (credit.freq === 'Monthly') creditsByFreq['Monthly'].push(creditObj);
-                        else if (credit.freq === 'Quarterly') creditsByFreq['Quarterly'].push(creditObj);
-                        else if (credit.freq === 'Semi-Annual') creditsByFreq['Semi-Annual'].push(creditObj);
-                        else if (credit.freq === 'Annual' || credit.freq === 'Every 4 Years') creditsByFreq['Annual'].push(creditObj);
+                        const creditObj = {
+                            bank,
+                            card,
+                            displayName,
+                            name: credit.name,
+                            amount: credit.amount,
+                            freq: credit.freq
+                        };
+
+                        if (credit.freq === 'Monthly') {
+                            creditsByFreq['Monthly'].push(creditObj);
+                        } else if (credit.freq === 'Quarterly') {
+                            creditsByFreq['Quarterly'].push(creditObj);
+                        } else if (credit.freq === 'Semi-Annual') {
+                            creditsByFreq['Semi-Annual'].push(creditObj);
+                        } else if (credit.freq === 'Annual' || credit.freq === 'Every 4 Years') {
+                            creditsByFreq['Annual'].push(creditObj);
+                        }
                     }
                 });
             });
 
+            // Build HTML grouped by frequency
             let html = '';
-            ['Monthly', 'Quarterly', 'Semi-Annual', 'Annual'].forEach(freq => {
-                if (creditsByFreq[freq].length > 0) {
-                    html += `<div style="margin-bottom: 30px;"><div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;"><div style="background: #3498db; color: white; padding: 12px 20px; border-radius: 4px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; font-size: 13px;">${freq}</div><div style="display: flex; gap: 10px;"><button onclick="checkAllCredits('${freq}')" style="padding: 6px 12px; background: #27ae60; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 600;">Check All</button><button onclick="uncheckAllCredits('${freq}')" style="padding: 6px 12px; background: #e74c3c; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 600;">Uncheck All</button></div></div><table class="results-table"><thead><tr><th style="width: 50px;">Used</th><th>Bank</th><th>Card</th><th>Credit</th><th style="text-align: right; width: 80px;">Amount</th><th>Type</th><th style="width: 100px; text-align: center;">Amount Used</th></tr></thead><tbody>`;
-                    creditsByFreq[freq].forEach((credit, idx) => {
-                        const classKey = freq.toLowerCase().replace('-', '');
-                        html += `<tr><td><input type="checkbox" class="credit-${classKey}" data-idx="${idx}" data-amount="${credit.amount}"></td><td><strong>${credit.bank}</strong></td><td>${credit.displayName}</td><td>${credit.name}</td><td style="text-align: right;">$${credit.amount}</td><td>${credit.freq}</td><td style="text-align: center;"><input type="number" class="credit-amount-${classKey}-${idx}" placeholder="$${credit.amount}" min="0" max="${credit.amount}" style="width: 70px; padding: 6px; border: 0.5px solid #ddd; border-radius: 4px; font-size: 12px; text-align: center; display: none;" disabled></td></tr>`;
-                    });
-                    html += `</tbody></table></div>`;
-                }
-            });
+            
+            // Monthly
+            if (creditsByFreq['Monthly'].length > 0) {
+                html += `<div style="margin-bottom: 30px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <div style="background: #3498db; color: white; padding: 12px 20px; border-radius: 4px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; font-size: 13px; margin: 0;">MONTHLY</div>
+                        <div style="display: flex; gap: 10px;">
+                            <button onclick="checkAllCredits('Monthly')" style="padding: 6px 12px; background: #27ae60; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 600;">Check All</button>
+                            <button onclick="uncheckAllCredits('Monthly')" style="padding: 6px 12px; background: #e74c3c; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 600;">Uncheck All</button>
+                        </div>
+                    </div>
+                    <table class="results-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 50px;">Used</th>
+                            <th>Bank</th>
+                            <th>Card</th>
+                            <th>Credit</th>
+                            <th style="text-align: right; width: 80px;">Amount</th>
+                            <th>Type</th>
+                            <th style="width: 100px; text-align: center;">Amount Used</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
+                creditsByFreq['Monthly'].forEach((credit, idx) => {
+                    html += `<tr>
+                        <td><input type="checkbox" class="credit-monthly" data-idx="${idx}" data-amount="${credit.amount}"></td>
+                        <td><strong>${credit.bank}</strong></td>
+                        <td>${credit.displayName}</td>
+                        <td>${credit.name}</td>
+                        <td style="text-align: right;">$${credit.amount}</td>
+                        <td>${credit.freq}</td>
+                        <td style="text-align: center;"><input type="number" class="credit-amount-monthly-${idx}" placeholder="$${credit.amount}" min="0" max="${credit.amount}" style="width: 70px; padding: 6px; border: 0.5px solid #ddd; border-radius: 4px; font-size: 12px; text-align: center; display: none;"></td>
+                    </tr>`;
+                });
+                html += `</tbody></table></div>`;
+            }
+
+            // Quarterly
+            if (creditsByFreq['Quarterly'].length > 0) {
+                html += `<div style="margin-bottom: 30px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <div style="background: #3498db; color: white; padding: 12px 20px; border-radius: 4px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; font-size: 13px; margin: 0;">QUARTERLY</div>
+                        <div style="display: flex; gap: 10px;">
+                            <button onclick="checkAllCredits('Quarterly')" style="padding: 6px 12px; background: #27ae60; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 600;">Check All</button>
+                            <button onclick="uncheckAllCredits('Quarterly')" style="padding: 6px 12px; background: #e74c3c; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 600;">Uncheck All</button>
+                        </div>
+                    </div>
+                    <table class="results-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 50px;">Used</th>
+                            <th>Bank</th>
+                            <th>Card</th>
+                            <th>Credit</th>
+                            <th style="text-align: right; width: 80px;">Amount</th>
+                            <th>Type</th>
+                            <th style="width: 100px; text-align: center;">Amount Used</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
+                creditsByFreq['Quarterly'].forEach((credit, idx) => {
+                    html += `<tr>
+                        <td><input type="checkbox" class="credit-quarterly" data-idx="${idx}" data-amount="${credit.amount}"></td>
+                        <td><strong>${credit.bank}</strong></td>
+                        <td>${credit.displayName}</td>
+                        <td>${credit.name}</td>
+                        <td style="text-align: right;">$${credit.amount}</td>
+                        <td>${credit.freq}</td>
+                        <td style="text-align: center;"><input type="number" class="credit-amount-quarterly-${idx}" placeholder="$${credit.amount}" min="0" max="${credit.amount}" style="width: 70px; padding: 6px; border: 0.5px solid #ddd; border-radius: 4px; font-size: 12px; text-align: center; display: none;"></td>
+                    </tr>`;
+                });
+                html += `</tbody></table></div>`;
+            }
+
+            // Semi-Annual
+            if (creditsByFreq['Semi-Annual'].length > 0) {
+                html += `<div style="margin-bottom: 30px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <div style="background: #3498db; color: white; padding: 12px 20px; border-radius: 4px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; font-size: 13px; margin: 0;">SEMI-ANNUAL</div>
+                        <div style="display: flex; gap: 10px;">
+                            <button onclick="checkAllCredits('Semi-Annual')" style="padding: 6px 12px; background: #27ae60; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 600;">Check All</button>
+                            <button onclick="uncheckAllCredits('Semi-Annual')" style="padding: 6px 12px; background: #e74c3c; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 600;">Uncheck All</button>
+                        </div>
+                    </div>
+                    <table class="results-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 50px;">Used</th>
+                            <th>Bank</th>
+                            <th>Card</th>
+                            <th>Credit</th>
+                            <th style="text-align: right; width: 80px;">Amount</th>
+                            <th>Type</th>
+                            <th style="width: 100px; text-align: center;">Amount Used</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
+                creditsByFreq['Semi-Annual'].forEach((credit, idx) => {
+                    html += `<tr>
+                        <td><input type="checkbox" class="credit-semi-annual" data-idx="${idx}" data-amount="${credit.amount}"></td>
+                        <td><strong>${credit.bank}</strong></td>
+                        <td>${credit.displayName}</td>
+                        <td>${credit.name}</td>
+                        <td style="text-align: right;">$${credit.amount}</td>
+                        <td>${credit.freq}</td>
+                        <td style="text-align: center;"><input type="number" class="credit-amount-semi-annual-${idx}" placeholder="$${credit.amount}" min="0" max="${credit.amount}" style="width: 70px; padding: 6px; border: 0.5px solid #ddd; border-radius: 4px; font-size: 12px; text-align: center; display: none;"></td>
+                    </tr>`;
+                });
+                html += `</tbody></table></div>`;
+            }
+
+            // Annual
+            if (creditsByFreq['Annual'].length > 0) {
+                html += `<div style="margin-bottom: 30px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <div style="background: #3498db; color: white; padding: 12px 20px; border-radius: 4px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; font-size: 13px; margin: 0;">ANNUAL</div>
+                        <div style="display: flex; gap: 10px;">
+                            <button onclick="checkAllCredits('Annual')" style="padding: 6px 12px; background: #27ae60; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 600;">Check All</button>
+                            <button onclick="uncheckAllCredits('Annual')" style="padding: 6px 12px; background: #e74c3c; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 600;">Uncheck All</button>
+                        </div>
+                    </div>
+                    <table class="results-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 50px;">Used</th>
+                            <th>Bank</th>
+                            <th>Card</th>
+                            <th>Credit</th>
+                            <th style="text-align: right; width: 80px;">Amount</th>
+                            <th>Type</th>
+                            <th style="width: 100px; text-align: center;">Amount Used</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
+                creditsByFreq['Annual'].forEach((credit, idx) => {
+                    html += `<tr>
+                        <td><input type="checkbox" class="credit-annual" data-idx="${idx}" data-amount="${credit.amount}"></td>
+                        <td><strong>${credit.bank}</strong></td>
+                        <td>${credit.displayName}</td>
+                        <td>${credit.name}</td>
+                        <td style="text-align: right;">$${credit.amount}</td>
+                        <td>${credit.freq}</td>
+                        <td style="text-align: center;"><input type="number" class="credit-amount-annual-${idx}" placeholder="$${credit.amount}" min="0" max="${credit.amount}" style="width: 70px; padding: 6px; border: 0.5px solid #ddd; border-radius: 4px; font-size: 12px; text-align: center; display: none;"></td>
+                    </tr>`;
+                });
+                html += `</tbody></table></div>`;
+            }
 
             document.getElementById('resultsTable').innerHTML = html || '<div class="empty-message">Select cards to see available credits</div>';
-
+            
+            // Restore states for quarterly, semi-annual, and annual credits based on their period
             const monthSelect = document.getElementById('month');
             const currentMonthIndex = monthSelect.selectedIndex;
             const currentQuarter = Math.floor(currentMonthIndex / 3);
             const currentHalf = currentMonthIndex < 6 ? 1 : 2;
             const currentYear = new Date().getFullYear();
             const creditStates = JSON.parse(localStorage.getItem('creditStates') || '{}');
-            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
+            // Get all cards to check their credits
             const restoreRows = document.querySelectorAll('#cardsBody tr');
             const restoreCards = [];
             restoreRows.forEach(row => {
@@ -537,15 +949,19 @@
                 const bank = selects[0].value;
                 const card = selects[1].value;
                 const nickname = input ? input.value : '';
-                if (bank && card) restoreCards.push({bank, card, nickname});
+                if (bank && card) {
+                    restoreCards.push({bank, card, nickname});
+                }
             });
 
+            // Restore states for all credit types including partial amounts
             restoreCards.forEach(({bank, card, nickname}) => {
                 const displayName = nickname ? `${card} (${nickname})` : card;
                 const credits = creditData[bank]?.[card] || [];
                 credits.forEach(credit => {
                     let stateKey;
                     if (credit.freq === 'Monthly') {
+                        const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
                         const currentMonth = monthNames[currentMonthIndex];
                         stateKey = `Monthly_${bank}_${displayName}_${credit.name}_${currentMonth}`;
                     } else if (credit.freq === 'Quarterly') {
@@ -555,7 +971,10 @@
                     } else if (credit.freq === 'Annual' || credit.freq === 'Every 4 Years') {
                         stateKey = `Annual_${bank}_${displayName}_${credit.name}_${currentYear}`;
                     }
-                    if (stateKey && creditStates[stateKey] === true) {
+
+                    const savedState = creditStates[stateKey];
+                    if (stateKey && (savedState === true || savedState === 'full' || typeof savedState === 'number')) {
+                        // Find and check the matching checkbox
                         const allCheckboxes = document.querySelectorAll('.results-table input[type="checkbox"]');
                         allCheckboxes.forEach(checkbox => {
                             const row = checkbox.closest('tr');
@@ -563,52 +982,103 @@
                             const cardCell = row.querySelector('td:nth-child(3)').textContent.trim();
                             const nameCell = row.querySelector('td:nth-child(4)').textContent.trim();
                             const freqCell = row.querySelector('td:nth-child(6)').textContent.trim();
-                            if (bankCell === bank && cardCell === displayName && nameCell === credit.name && freqCell === credit.freq) checkbox.checked = true;
+                            if (bankCell === bank && cardCell === displayName && nameCell === credit.name && freqCell === credit.freq) {
+                                checkbox.checked = true;
+                                // Restore partial amount if it exists
+                                const amountInput = row.querySelector('input[type="number"]:not([type="checkbox"])');
+                                if (typeof savedState === 'number') {
+                                    amountInput.style.display = 'block';
+                                    amountInput.disabled = false;
+                                    amountInput.value = savedState;
+                                } else if (savedState === 'full') {
+                                    amountInput.style.display = 'block';
+                                    amountInput.disabled = false;
+                                    amountInput.value = credit.amount;
+                                }
+                            }
                         });
                     }
                 });
             });
-
+            
+            // Add event listeners to all checkboxes
             const allCheckboxes = document.querySelectorAll('.results-table input[type="checkbox"]');
             allCheckboxes.forEach(checkbox => {
                 checkbox.addEventListener('change', function() {
+                    // Toggle amount input visibility and enable/disable
                     const row = this.closest('tr');
                     const amountInput = row.querySelector('input[type="number"]:not([type="checkbox"])');
                     const fullAmount = this.getAttribute('data-amount');
+                    
                     if (this.checked) {
                         amountInput.style.display = 'block';
                         amountInput.disabled = false;
-                        if (!amountInput.value) amountInput.value = fullAmount;
+                        if (!amountInput.value) {
+                            amountInput.value = fullAmount;
+                        }
                     } else {
                         amountInput.style.display = 'none';
                         amountInput.disabled = true;
                         amountInput.value = '';
                     }
+                    
+                    // AUTO-SAVE immediately
+                    autoSaveCheckboxState(row);
                     updateTallies();
                 });
             });
-
+            
+            // Add event listeners to amount inputs
             const amountInputs = document.querySelectorAll('.results-table input[type="number"]:not([type="checkbox"])');
             amountInputs.forEach(input => {
-                input.addEventListener('change', updateTallies);
-                input.addEventListener('input', updateTallies);
+                input.addEventListener('change', function() {
+                    autoSaveCheckboxState(this.closest('tr'));
+                    updateTallies();
+                });
+                input.addEventListener('input', function() {
+                    autoSaveCheckboxState(this.closest('tr'));
+                    updateTallies();
+                });
             });
-
+            
+            // Initial tally update
             updateTallies();
+            
+            // Check for expiring credits
             checkExpiringCredits();
         }
 
         function checkAllCredits(freq) {
-            const classMap = {'Monthly': 'credit-monthly', 'Quarterly': 'credit-quarterly', 'Semi-Annual': 'credit-semi-annual', 'Annual': 'credit-annual'};
+            const classMap = {
+                'Monthly': 'credit-monthly',
+                'Quarterly': 'credit-quarterly',
+                'Semi-Annual': 'credit-semi-annual',
+                'Annual': 'credit-annual'
+            };
             const className = classMap[freq];
-            document.querySelectorAll(`.${className}`).forEach(checkbox => checkbox.checked = true);
+            const checkboxes = document.querySelectorAll(`.${className}`);
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = true;
+                // Trigger change event to show amount inputs
+                checkbox.dispatchEvent(new Event('change', { bubbles: true }));
+            });
             updateTallies();
         }
 
         function uncheckAllCredits(freq) {
-            const classMap = {'Monthly': 'credit-monthly', 'Quarterly': 'credit-quarterly', 'Semi-Annual': 'credit-semi-annual', 'Annual': 'credit-annual'};
+            const classMap = {
+                'Monthly': 'credit-monthly',
+                'Quarterly': 'credit-quarterly',
+                'Semi-Annual': 'credit-semi-annual',
+                'Annual': 'credit-annual'
+            };
             const className = classMap[freq];
-            document.querySelectorAll(`.${className}`).forEach(checkbox => checkbox.checked = false);
+            const checkboxes = document.querySelectorAll(`.${className}`);
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = false;
+                // Trigger change event to hide amount inputs
+                checkbox.dispatchEvent(new Event('change', { bubbles: true }));
+            });
             updateTallies();
         }
 
@@ -622,22 +1092,24 @@
             const today = new Date();
             const currentYear = today.getFullYear();
             let expDate;
+
             if (freq === 'Monthly') {
                 const month = monthIndex;
                 const lastDay = new Date(currentYear, month + 1, 0).getDate();
                 expDate = new Date(currentYear, month, lastDay);
             } else if (freq === 'Quarterly') {
-                const quarterEndMonths = [2, 5, 8, 11];
+                const quarterEndMonths = [2, 5, 8, 11]; // Mar, Jun, Sep, Dec (0-indexed)
                 const quarterMonth = quarterEndMonths[Math.floor(monthIndex / 3)];
                 const lastDay = new Date(currentYear, quarterMonth + 1, 0).getDate();
                 expDate = new Date(currentYear, quarterMonth, lastDay);
             } else if (freq === 'Semi-Annual') {
-                const halfMonth = monthIndex < 6 ? 5 : 11;
+                const halfMonth = monthIndex < 6 ? 5 : 11; // Jun or Dec
                 const lastDay = new Date(currentYear, halfMonth + 1, 0).getDate();
                 expDate = new Date(currentYear, halfMonth, lastDay);
             } else if (freq === 'Annual') {
-                expDate = new Date(currentYear, 11, 31);
+                expDate = new Date(currentYear, 11, 31); // Dec 31
             }
+
             return expDate;
         }
 
@@ -658,7 +1130,9 @@
                 const bank = selects[0].value;
                 const card = selects[1].value;
                 const nickname = inputs[0] ? inputs[0].value : '';
-                if (bank && card) cards.push({bank, card, nickname});
+                if (bank && card) {
+                    cards.push({bank, card, nickname});
+                }
             });
 
             const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -668,15 +1142,23 @@
             cards.forEach(({bank, card, nickname}) => {
                 const displayName = nickname ? `${card} (${nickname})` : card;
                 const credits = creditData[bank]?.[card] || [];
+
                 credits.forEach(credit => {
                     if (credit.freq === 'Monthly') {
                         for (let m = 0; m < 12; m++) {
                             const stateKey = `Monthly_${bank}_${displayName}_${credit.name}_${monthNames[m]}`;
-                            if (creditStates[stateKey] !== true) {
+                            if (creditStates[stateKey] !== true) { // Not redeemed
                                 const expDate = getExpirationDate('Monthly', m);
                                 const daysLeft = getDaysUntilExpiration(expDate);
                                 if (daysLeft > 0 && daysLeft <= 30) {
-                                    expiringCredits.push({bank, card: displayName, credit: credit.name, amount: credit.amount, daysLeft, expDate: expDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })});
+                                    expiringCredits.push({
+                                        bank,
+                                        card: displayName,
+                                        credit: credit.name,
+                                        amount: credit.amount,
+                                        daysLeft: daysLeft,
+                                        expDate: expDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+                                    });
                                 }
                             }
                         }
@@ -687,7 +1169,14 @@
                                 const expDate = getExpirationDate('Quarterly', q * 3);
                                 const daysLeft = getDaysUntilExpiration(expDate);
                                 if (daysLeft > 0 && daysLeft <= 30) {
-                                    expiringCredits.push({bank, card: displayName, credit: credit.name, amount: credit.amount, daysLeft, expDate: expDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })});
+                                    expiringCredits.push({
+                                        bank,
+                                        card: displayName,
+                                        credit: credit.name,
+                                        amount: credit.amount,
+                                        daysLeft: daysLeft,
+                                        expDate: expDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+                                    });
                                 }
                             }
                         }
@@ -698,7 +1187,14 @@
                                 const expDate = getExpirationDate('Semi-Annual', h * 6);
                                 const daysLeft = getDaysUntilExpiration(expDate);
                                 if (daysLeft > 0 && daysLeft <= 30) {
-                                    expiringCredits.push({bank, card: displayName, credit: credit.name, amount: credit.amount, daysLeft, expDate: expDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })});
+                                    expiringCredits.push({
+                                        bank,
+                                        card: displayName,
+                                        credit: credit.name,
+                                        amount: credit.amount,
+                                        daysLeft: daysLeft,
+                                        expDate: expDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+                                    });
                                 }
                             }
                         }
@@ -708,13 +1204,21 @@
                             const expDate = getExpirationDate('Annual', 0);
                             const daysLeft = getDaysUntilExpiration(expDate);
                             if (daysLeft > 0 && daysLeft <= 30) {
-                                expiringCredits.push({bank, card: displayName, credit: credit.name, amount: credit.amount, daysLeft, expDate: expDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })});
+                                expiringCredits.push({
+                                    bank,
+                                    card: displayName,
+                                    credit: credit.name,
+                                    amount: credit.amount,
+                                    daysLeft: daysLeft,
+                                    expDate: expDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+                                });
                             }
                         }
                     }
                 });
             });
 
+            // Update badge
             const badge = document.getElementById('expirationBadge');
             if (expiringCredits.length > 0) {
                 const minDays = Math.min(...expiringCredits.map(c => c.daysLeft));
@@ -723,15 +1227,27 @@
             } else {
                 badge.style.display = 'none';
             }
+
             return expiringCredits;
         }
 
         function toggleExpirationAlert() {
             const expiringCredits = checkExpiringCredits();
             let html = '';
+            
             expiringCredits.forEach(credit => {
-                html += `<div style="background: #fff3cd; border: 0.5px solid #f39c12; border-radius: 6px; padding: 12px;"><div style="display: flex; justify-content: space-between; margin-bottom: 6px;"><div style="font-weight: 500; font-size: 13px;">${credit.card}</div><div style="font-size: 11px; font-weight: 600; color: #c0392b;">EXPIRES ${credit.expDate}</div></div><div style="font-size: 12px; color: #666; margin-bottom: 4px;">${credit.credit}</div><div style="font-size: 12px; color: #8b6914;">$${credit.amount} • ${credit.daysLeft} day${credit.daysLeft !== 1 ? 's' : ''} left</div></div>`;
+                html += `
+                    <div style="background: #fff3cd; border: 0.5px solid #f39c12; border-radius: 6px; padding: 12px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                            <div style="font-weight: 500; font-size: 13px;">${credit.card}</div>
+                            <div style="font-size: 11px; font-weight: 600; color: #c0392b;">EXPIRES ${credit.expDate}</div>
+                        </div>
+                        <div style="font-size: 12px; color: #666; margin-bottom: 4px;">${credit.credit}</div>
+                        <div style="font-size: 12px; color: #8b6914;">$${credit.amount} • ${credit.daysLeft} day${credit.daysLeft !== 1 ? 's' : ''} left</div>
+                    </div>
+                `;
             });
+
             document.getElementById('expirationList').innerHTML = html || '<div style="text-align: center; color: #888; padding: 20px;">No credits expiring soon!</div>';
             document.getElementById('expirationModal').style.display = 'flex';
         }
@@ -740,22 +1256,203 @@
             document.getElementById('expirationModal').style.display = 'none';
         }
 
+        function showExportOptions() {
+            document.getElementById('exportModal').style.display = 'flex';
+        }
+
+        function closeExportModal() {
+            document.getElementById('exportModal').style.display = 'none';
+        }
+
+        function exportToCSV() {
+            const rows = document.querySelectorAll('#cardsBody tr');
+            const cards = [];
+            rows.forEach(row => {
+                const selects = row.querySelectorAll('select');
+                const inputs = row.querySelectorAll('input');
+                const bank = selects[0].value;
+                const card = selects[1].value;
+                const nickname = inputs[0] ? inputs[0].value : '';
+                const annualFee = inputs[1] ? inputs[1].value : '0';
+                if (bank && card) {
+                    cards.push({bank, card, nickname, annualFee});
+                }
+            });
+
+            const creditStates = JSON.parse(localStorage.getItem('creditStates') || '{}');
+            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+            
+            let csv = 'Bank,Card,Nickname,Annual Fee,Credit Name,Amount,Frequency,Status\n';
+            
+            cards.forEach(({bank, card, nickname, annualFee}) => {
+                const displayName = nickname ? `${card} (${nickname})` : card;
+                const credits = creditData[bank]?.[card] || [];
+                credits.forEach(credit => {
+                    // Check if credit is used in any period
+                    let isUsed = false;
+                    if (credit.freq === 'Monthly') {
+                        for (let m = 0; m < 12; m++) {
+                            const stateKey = `Monthly_${bank}_${displayName}_${credit.name}_${monthNames[m]}`;
+                            if (creditStates[stateKey] === true) {
+                                isUsed = true;
+                                break;
+                            }
+                        }
+                    } else if (credit.freq === 'Quarterly') {
+                        for (let q = 1; q <= 4; q++) {
+                            const stateKey = `Quarterly_${bank}_${displayName}_${credit.name}_Q${q}`;
+                            if (creditStates[stateKey] === true) {
+                                isUsed = true;
+                                break;
+                            }
+                        }
+                    } else if (credit.freq === 'Semi-Annual') {
+                        for (let h = 1; h <= 2; h++) {
+                            const stateKey = `Semi-Annual_${bank}_${displayName}_${credit.name}_H${h}`;
+                            if (creditStates[stateKey] === true) {
+                                isUsed = true;
+                                break;
+                            }
+                        }
+                    } else if (credit.freq === 'Annual' || credit.freq === 'Every 4 Years') {
+                        const currentYear = new Date().getFullYear();
+                        const stateKey = `Annual_${bank}_${displayName}_${credit.name}_${currentYear}`;
+                        if (creditStates[stateKey] === true) {
+                            isUsed = true;
+                        }
+                    }
+                    
+                    const status = isUsed ? 'Redeemed' : 'Available';
+                    csv += `"${bank}","${card}","${nickname}","$${annualFee}","${credit.name}","$${credit.amount}","${credit.freq}","${status}"\n`;
+                });
+            });
+            
+            downloadFile(csv, 'statement-credits-tracker.csv', 'text/csv');
+            closeExportModal();
+        }
+
+        function exportToJSON() {
+            const rows = document.querySelectorAll('#cardsBody tr');
+            const cards = [];
+            rows.forEach(row => {
+                const selects = row.querySelectorAll('select');
+                const inputs = row.querySelectorAll('input');
+                const bank = selects[0].value;
+                const card = selects[1].value;
+                const nickname = inputs[0] ? inputs[0].value : '';
+                const annualFee = inputs[1] ? parseInt(inputs[1].value) || 0 : 0;
+                if (bank && card) {
+                    cards.push({bank, card, nickname, annualFee});
+                }
+            });
+
+            const creditStates = JSON.parse(localStorage.getItem('creditStates') || '{}');
+            const exportData = {
+                exportDate: new Date().toISOString(),
+                cards: cards,
+                creditStates: creditStates
+            };
+            
+            const jsonString = JSON.stringify(exportData, null, 2);
+            downloadFile(jsonString, 'statement-credits-tracker-backup.json', 'application/json');
+            closeExportModal();
+        }
+
+        function exportToPDF() {
+            const rows = document.querySelectorAll('#cardsBody tr');
+            const cards = [];
+            rows.forEach(row => {
+                const selects = row.querySelectorAll('select');
+                const inputs = row.querySelectorAll('input');
+                const bank = selects[0].value;
+                const card = selects[1].value;
+                const nickname = inputs[0] ? inputs[0].value : '';
+                const annualFee = inputs[1] ? parseInt(inputs[1].value) || 0 : 0;
+                if (bank && card) {
+                    cards.push({bank, card, nickname, annualFee});
+                }
+            });
+
+            const creditStates = JSON.parse(localStorage.getItem('creditStates') || '{}');
+            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+            const currentYear = new Date().getFullYear();
+
+            let pdfContent = `Statement Credits Tracker Report\n`;
+            pdfContent += `Generated: ${new Date().toLocaleDateString()}\n`;
+            pdfContent += `=====================================\n\n`;
+
+            let totalCredits = 0, totalFees = 0;
+
+            cards.forEach(({bank, card, nickname, annualFee}) => {
+                const displayName = nickname ? `${card} (${nickname})` : card;
+                pdfContent += `${bank} - ${displayName}\n`;
+                pdfContent += `Annual Fee: $${annualFee}\n`;
+                
+                const credits = creditData[bank]?.[card] || [];
+                let cardTotal = 0;
+                credits.forEach(credit => {
+                    cardTotal += credit.amount;
+                });
+                
+                pdfContent += `Total Credits: $${cardTotal}\n`;
+                pdfContent += `Net Value: $${cardTotal - annualFee}\n`;
+                pdfContent += `\n`;
+                
+                totalCredits += cardTotal;
+                totalFees += annualFee;
+            });
+
+            pdfContent += `=====================================\n`;
+            pdfContent += `PORTFOLIO SUMMARY\n`;
+            pdfContent += `Total Credits: $${totalCredits}\n`;
+            pdfContent += `Total Annual Fees: $${totalFees}\n`;
+            pdfContent += `Net Portfolio Value: $${totalCredits - totalFees}\n`;
+
+            downloadFile(pdfContent, 'statement-credits-tracker-report.txt', 'text/plain');
+            closeExportModal();
+        }
+
+        function downloadFile(content, filename, type) {
+            const blob = new Blob([content], { type: type });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+        }
+
         function resetAllData() {
-            if (confirm('Are you sure you want to reset all data? This will clear all checked credits and start fresh for the new year. This cannot be undone!')) {
+            const confirmed = confirm('Are you sure you want to reset all data? This will clear all checked credits and start fresh for the new year. This cannot be undone!');
+            if (confirmed) {
+                // Clear all credit states from localStorage
                 localStorage.removeItem('creditStates');
                 localStorage.removeItem('cards');
-                document.getElementById('cardsBody').innerHTML = '';
+                
+                // Clear the cards from display
+                const tbody = document.getElementById('cardsBody');
+                tbody.innerHTML = '';
+                
+                // Reset tallies to 0
                 document.getElementById('availableTotal').textContent = '0';
                 document.getElementById('redeemedTotal').textContent = '0';
                 document.getElementById('unusedTotal').textContent = '0';
+                
+                // Clear the results table
                 document.getElementById('resultsTable').innerHTML = '<div class="empty-message">Select cards to see available credits</div>';
+                
+                // Reset to a fresh start
                 addCard();
                 updateResults();
+                
                 alert('✓ All data has been reset! Ready for the new year.');
             }
         }
 
         function saveNow() {
+            // Force save all current states
             const monthSelect = document.getElementById('month');
             const currentMonthIndex = monthSelect.selectedIndex;
             const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -763,6 +1460,7 @@
             const currentQuarter = Math.floor(currentMonthIndex / 3);
             const currentHalf = currentMonthIndex < 6 ? 1 : 2;
 
+            // Save current card selections
             const rows = document.querySelectorAll('#cardsBody tr');
             const cards = [];
             rows.forEach(row => {
@@ -771,31 +1469,45 @@
                 const bank = selects[0].value;
                 const card = selects[1].value;
                 const nickname = input ? input.value : '';
-                if (bank && card) cards.push({bank, card, nickname});
+                if (bank && card) {
+                    cards.push({bank, card, nickname});
+                }
             });
             localStorage.setItem('cards', JSON.stringify(cards));
 
+            // Save all current checkbox states
             const allCheckboxes = document.querySelectorAll('.results-table input[type="checkbox"]');
             const creditStates = JSON.parse(localStorage.getItem('creditStates') || '{}');
+            
             allCheckboxes.forEach(checkbox => {
                 const row = checkbox.closest('tr');
                 const bankCell = row.querySelector('td:nth-child(2)').textContent.trim();
                 const cardCell = row.querySelector('td:nth-child(3)').textContent.trim();
                 const creditCell = row.querySelector('td:nth-child(4)').textContent.trim();
                 const freqCell = row.querySelector('td:nth-child(6)').textContent.trim();
+                
                 let stateKey;
-                if (freqCell === 'Monthly') stateKey = `Monthly_${bankCell}_${cardCell}_${creditCell}_${currentMonth}`;
-                else if (freqCell === 'Quarterly') stateKey = `Quarterly_${bankCell}_${cardCell}_${creditCell}_Q${currentQuarter + 1}`;
-                else if (freqCell === 'Semi-Annual') stateKey = `Semi-Annual_${bankCell}_${cardCell}_${creditCell}_H${currentHalf}`;
-                else if (freqCell === 'Annual' || freqCell === 'Every 4 Years') stateKey = `Annual_${bankCell}_${cardCell}_${creditCell}_${currentMonth}`;
+                if (freqCell === 'Monthly') {
+                    stateKey = `Monthly_${bankCell}_${cardCell}_${creditCell}_${currentMonth}`;
+                } else if (freqCell === 'Quarterly') {
+                    stateKey = `Quarterly_${bankCell}_${cardCell}_${creditCell}_Q${currentQuarter + 1}`;
+                } else if (freqCell === 'Semi-Annual') {
+                    stateKey = `Semi-Annual_${bankCell}_${cardCell}_${creditCell}_H${currentHalf}`;
+                } else if (freqCell === 'Annual' || freqCell === 'Every 4 Years') {
+                    stateKey = `Annual_${bankCell}_${cardCell}_${creditCell}_${currentMonth}`;
+                }
+                
                 creditStates[stateKey] = checkbox.checked;
             });
+            
             localStorage.setItem('creditStates', JSON.stringify(creditStates));
-
+            
+            // Show confirmation message
             const button = event.target;
             const originalText = button.textContent;
             button.textContent = '✓ Saved!';
             button.style.background = '#27ae60';
+            
             setTimeout(() => {
                 button.textContent = originalText;
                 button.style.background = '#3498db';
@@ -806,28 +1518,43 @@
             const creditsView = document.getElementById('creditsView');
             const summaryView = document.getElementById('summaryView');
             const historyView = document.getElementById('historyView');
+            const creditsBtn = document.getElementById('creditsViewBtn');
+            const summaryBtn = document.getElementById('summaryViewBtn');
+            const historyBtn = document.getElementById('historyViewBtn');
+
+            // Hide all views
             creditsView.style.display = 'none';
             summaryView.style.display = 'none';
             historyView.style.display = 'none';
-            document.getElementById('creditsViewBtn').style.background = 'transparent';
-            document.getElementById('creditsViewBtn').style.color = '#3498db';
-            document.getElementById('summaryViewBtn').style.background = 'transparent';
-            document.getElementById('summaryViewBtn').style.color = '#3498db';
-            document.getElementById('historyViewBtn').style.background = 'transparent';
-            document.getElementById('historyViewBtn').style.color = '#3498db';
+
+            // Reset all buttons
+            creditsBtn.style.background = 'transparent';
+            creditsBtn.style.color = '#3498db';
+            creditsBtn.style.border = '1px solid #3498db';
+            summaryBtn.style.background = 'transparent';
+            summaryBtn.style.color = '#3498db';
+            summaryBtn.style.border = '1px solid #3498db';
+            historyBtn.style.background = 'transparent';
+            historyBtn.style.color = '#3498db';
+            historyBtn.style.border = '1px solid #3498db';
+
+            // Show selected view and highlight button
             if (view === 'credits') {
                 creditsView.style.display = 'block';
-                document.getElementById('creditsViewBtn').style.background = '#3498db';
-                document.getElementById('creditsViewBtn').style.color = 'white';
+                creditsBtn.style.background = '#3498db';
+                creditsBtn.style.color = 'white';
+                creditsBtn.style.border = 'none';
             } else if (view === 'summary') {
                 summaryView.style.display = 'block';
-                document.getElementById('summaryViewBtn').style.background = '#3498db';
-                document.getElementById('summaryViewBtn').style.color = 'white';
+                summaryBtn.style.background = '#3498db';
+                summaryBtn.style.color = 'white';
+                summaryBtn.style.border = 'none';
                 generateCardSummary();
             } else if (view === 'history') {
                 historyView.style.display = 'block';
-                document.getElementById('historyViewBtn').style.background = '#3498db';
-                document.getElementById('historyViewBtn').style.color = 'white';
+                historyBtn.style.background = '#3498db';
+                historyBtn.style.color = 'white';
+                historyBtn.style.border = 'none';
                 initializeYearSelector();
                 generateAnnualHistory();
             }
@@ -837,6 +1564,7 @@
             const currentYear = new Date().getFullYear();
             const yearSelector = document.getElementById('yearSelector');
             yearSelector.innerHTML = '';
+            
             for (let year = currentYear; year >= currentYear - 3; year--) {
                 const option = document.createElement('option');
                 option.value = year;
@@ -849,6 +1577,7 @@
         function generateAnnualHistory() {
             const yearSelector = document.getElementById('yearSelector');
             const selectedYear = parseInt(yearSelector.value);
+            
             const rows = document.querySelectorAll('#cardsBody tr');
             const cards = [];
             rows.forEach(row => {
@@ -858,7 +1587,9 @@
                 const card = selects[1].value;
                 const nickname = inputs[0] ? inputs[0].value : '';
                 const annualFee = inputs[1] ? parseInt(inputs[1].value) || 0 : 0;
-                if (bank && card) cards.push({bank, card, nickname, annualFee});
+                if (bank && card) {
+                    cards.push({bank, card, nickname, annualFee});
+                }
             });
 
             const creditStates = JSON.parse(localStorage.getItem('creditStates') || '{}');
@@ -874,6 +1605,7 @@
 
                 credits.forEach(credit => {
                     let isUsed = false;
+                    
                     if (credit.freq === 'Monthly') {
                         for (let m = 0; m < 12; m++) {
                             const stateKey = `Monthly_${bank}_${displayName}_${credit.name}_${monthNames[m]}`;
@@ -882,8 +1614,11 @@
                                 break;
                             }
                         }
-                        if (isUsed) cardRedeemed += credit.amount;
-                        else cardAvailable += credit.amount;
+                        if (isUsed) {
+                            cardRedeemed += credit.amount;
+                        } else {
+                            cardAvailable += credit.amount;
+                        }
                     } else if (credit.freq === 'Quarterly') {
                         for (let q = 1; q <= 4; q++) {
                             const stateKey = `Quarterly_${bank}_${displayName}_${credit.name}_Q${q}`;
@@ -892,8 +1627,11 @@
                                 break;
                             }
                         }
-                        if (isUsed) cardRedeemed += credit.amount;
-                        else cardAvailable += credit.amount;
+                        if (isUsed) {
+                            cardRedeemed += credit.amount;
+                        } else {
+                            cardAvailable += credit.amount;
+                        }
                     } else if (credit.freq === 'Semi-Annual') {
                         for (let h = 1; h <= 2; h++) {
                             const stateKey = `Semi-Annual_${bank}_${displayName}_${credit.name}_H${h}`;
@@ -902,34 +1640,106 @@
                                 break;
                             }
                         }
-                        if (isUsed) cardRedeemed += credit.amount;
-                        else cardAvailable += credit.amount;
+                        if (isUsed) {
+                            cardRedeemed += credit.amount;
+                        } else {
+                            cardAvailable += credit.amount;
+                        }
                     } else if (credit.freq === 'Annual' || credit.freq === 'Every 4 Years') {
                         const stateKey = `Annual_${bank}_${displayName}_${credit.name}_${selectedYear}`;
                         if (creditStates[stateKey] === true) {
                             isUsed = true;
                         }
-                        if (isUsed) cardRedeemed += credit.amount;
-                        else cardAvailable += credit.amount;
+                        if (isUsed) {
+                            cardRedeemed += credit.amount;
+                        } else {
+                            cardAvailable += credit.amount;
+                        }
                     }
+                    
                     cardTotal += credit.amount;
                 });
 
                 const utilization = cardTotal > 0 ? Math.round((cardRedeemed / cardTotal) * 100) : 0;
-                cardHistories.push({bank, displayName, total: cardTotal, redeemed: cardRedeemed, available: cardAvailable, unused: cardUnused, utilization});
+                cardHistories.push({
+                    bank,
+                    displayName,
+                    total: cardTotal,
+                    redeemed: cardRedeemed,
+                    available: cardAvailable,
+                    unused: cardUnused,
+                    utilization: utilization
+                });
+
                 yearTotal.total += cardTotal;
                 yearTotal.redeemed += cardRedeemed;
                 yearTotal.available += cardAvailable;
+                yearTotal.unused += cardUnused;
             });
 
             const yearUtilization = yearTotal.total > 0 ? Math.round((yearTotal.redeemed / yearTotal.total) * 100) : 0;
+
             let html = '';
             cardHistories.forEach(card => {
                 const utilizationColor = card.utilization >= 95 ? '#27ae60' : card.utilization >= 80 ? '#f39c12' : '#e74c3c';
                 const utilizationText = card.utilization >= 95 ? '✓' : card.utilization >= 80 ? '⚠' : '✗';
-                html += `<div style="background: white; border: 0.5px solid #ddd; border-radius: 8px; padding: 1.25rem;"><div style="font-weight: 500; font-size: 15px; margin-bottom: 4px;">${card.bank}</div><div style="font-weight: 500; font-size: 14px; margin-bottom: 16px; color: #666;">${card.displayName}</div><div style="font-size: 12px; color: #888; margin-bottom: 16px;">${selectedYear} Performance</div><div style="display: flex; flex-direction: column; gap: 12px;"><div><div style="font-size: 12px; color: #888; margin-bottom: 4px;">Available</div><div style="font-size: 20px; font-weight: 500; color: #3498db;">$${card.available}</div></div><div><div style="font-size: 12px; color: #888; margin-bottom: 4px;">Redeemed</div><div style="font-size: 20px; font-weight: 500; color: #27ae60;">$${card.redeemed}</div></div><div style="border-top: 0.5px solid #ddd; padding-top: 12px; margin-top: 8px;"><div style="font-size: 12px; color: #888; margin-bottom: 4px;">Total Value</div><div style="font-size: 18px; font-weight: 600;">$${card.total}</div></div><div style="background: ${utilizationColor === '#27ae60' ? '#e8f8f5' : utilizationColor === '#f39c12' ? '#fff3cd' : '#ffe6e6'}; padding: 8px; border-radius: 4px; text-align: center;"><div style="font-size: 11px; font-weight: 600; color: ${utilizationColor};">${utilizationText} ${card.utilization}% Utilized</div></div></div></div>`;
+                
+                html += `
+                    <div style="background: white; border: 0.5px solid #ddd; border-radius: 8px; padding: 1.25rem;">
+                        <div style="font-weight: 500; font-size: 15px; margin-bottom: 4px;">${card.bank}</div>
+                        <div style="font-weight: 500; font-size: 14px; margin-bottom: 16px; color: #666;">${card.displayName}</div>
+                        <div style="font-size: 12px; color: #888; margin-bottom: 16px;">${selectedYear} Performance</div>
+                        <div style="display: flex; flex-direction: column; gap: 12px;">
+                            <div>
+                                <div style="font-size: 12px; color: #888; margin-bottom: 4px;">Available</div>
+                                <div style="font-size: 20px; font-weight: 500; color: #3498db;">$${card.available}</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 12px; color: #888; margin-bottom: 4px;">Redeemed</div>
+                                <div style="font-size: 20px; font-weight: 500; color: #27ae60;">$${card.redeemed}</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 12px; color: #888; margin-bottom: 4px;">Unused</div>
+                                <div style="font-size: 20px; font-weight: 500; color: #e74c3c;">$${card.unused}</div>
+                            </div>
+                            <div style="border-top: 0.5px solid #ddd; padding-top: 12px; margin-top: 8px;">
+                                <div style="font-size: 12px; color: #888; margin-bottom: 4px;">Total Value</div>
+                                <div style="font-size: 18px; font-weight: 600;">$${card.total}</div>
+                            </div>
+                            <div style="background: ${utilizationColor === '#27ae60' ? '#e8f8f5' : utilizationColor === '#f39c12' ? '#fff3cd' : '#ffe6e6'}; padding: 8px; border-radius: 4px; text-align: center;">
+                                <div style="font-size: 11px; font-weight: 600; color: ${utilizationColor};">${utilizationText} ${card.utilization}% Utilized</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
             });
-            html += `<div style="background: white; border: 0.5px solid #ddd; border-radius: 8px; padding: 1.25rem; background: #f9f9f9;"><div style="font-weight: 600; font-size: 15px; margin-bottom: 4px;">${selectedYear} SUMMARY</div><div style="font-size: 12px; color: #888; margin-bottom: 16px;">Annual Totals</div><div style="display: flex; flex-direction: column; gap: 12px;"><div><div style="font-size: 12px; color: #888; margin-bottom: 4px;">Total Credits</div><div style="font-size: 20px; font-weight: 500; color: #3498db;">$${yearTotal.total}</div></div><div><div style="font-size: 12px; color: #888; margin-bottom: 4px;">Total Redeemed</div><div style="font-size: 20px; font-weight: 500; color: #27ae60;">$${yearTotal.redeemed}</div></div><div style="border-top: 0.5px solid #ddd; padding-top: 12px; margin-top: 8px;"><div style="font-size: 12px; color: #888; margin-bottom: 4px;">Utilization Rate</div><div style="font-size: 18px; font-weight: 600; color: #27ae60;">${yearUtilization}%</div></div></div></div>`;
+
+            // Add year summary
+            html += `
+                <div style="background: white; border: 0.5px solid #ddd; border-radius: 8px; padding: 1.25rem; background: #f9f9f9;">
+                    <div style="font-weight: 600; font-size: 15px; margin-bottom: 4px;">${selectedYear} SUMMARY</div>
+                    <div style="font-size: 12px; color: #888; margin-bottom: 16px;">Annual Totals</div>
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                        <div>
+                            <div style="font-size: 12px; color: #888; margin-bottom: 4px;">Total Credits</div>
+                            <div style="font-size: 20px; font-weight: 500; color: #3498db;">$${yearTotal.total}</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 12px; color: #888; margin-bottom: 4px;">Total Redeemed</div>
+                            <div style="font-size: 20px; font-weight: 500; color: #27ae60;">$${yearTotal.redeemed}</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 12px; color: #888; margin-bottom: 4px;">Total Unused</div>
+                            <div style="font-size: 20px; font-weight: 500; color: #e74c3c;">$${yearTotal.unused}</div>
+                        </div>
+                        <div style="border-top: 0.5px solid #ddd; padding-top: 12px; margin-top: 8px;">
+                            <div style="font-size: 12px; color: #888; margin-bottom: 4px;">Utilization Rate</div>
+                            <div style="font-size: 18px; font-weight: 600; color: #27ae60;">${yearUtilization}%</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
             document.getElementById('historyContainer').innerHTML = html;
         }
 
@@ -943,7 +1753,9 @@
                 const card = selects[1].value;
                 const nickname = inputs[0] ? inputs[0].value : '';
                 const annualFee = inputs[1] ? parseInt(inputs[1].value) || 0 : 0;
-                if (bank && card) cards.push({bank, card, nickname, annualFee});
+                if (bank && card) {
+                    cards.push({bank, card, nickname, annualFee});
+                }
             });
 
             const creditStates = JSON.parse(localStorage.getItem('creditStates') || '{}');
@@ -960,6 +1772,8 @@
 
                 credits.forEach(credit => {
                     let isUsed = false;
+                    
+                    // Check all periods for this credit
                     if (credit.freq === 'Monthly') {
                         for (let m = 0; m < 12; m++) {
                             const stateKey = `Monthly_${bank}_${displayName}_${credit.name}_${monthNames[m]}`;
@@ -968,8 +1782,11 @@
                                 break;
                             }
                         }
-                        if (isUsed) cardRedeemed += credit.amount;
-                        else cardAvailable += credit.amount;
+                        if (isUsed) {
+                            cardRedeemed += credit.amount;
+                        } else {
+                            cardAvailable += credit.amount;
+                        }
                     } else if (credit.freq === 'Quarterly') {
                         for (let q = 1; q <= 4; q++) {
                             const stateKey = `Quarterly_${bank}_${displayName}_${credit.name}_Q${q}`;
@@ -978,8 +1795,11 @@
                                 break;
                             }
                         }
-                        if (isUsed) cardRedeemed += credit.amount;
-                        else cardAvailable += credit.amount;
+                        if (isUsed) {
+                            cardRedeemed += credit.amount;
+                        } else {
+                            cardAvailable += credit.amount;
+                        }
                     } else if (credit.freq === 'Semi-Annual') {
                         for (let h = 1; h <= 2; h++) {
                             const stateKey = `Semi-Annual_${bank}_${displayName}_${credit.name}_H${h}`;
@@ -988,8 +1808,11 @@
                                 break;
                             }
                         }
-                        if (isUsed) cardRedeemed += credit.amount;
-                        else cardAvailable += credit.amount;
+                        if (isUsed) {
+                            cardRedeemed += credit.amount;
+                        } else {
+                            cardAvailable += credit.amount;
+                        }
                     } else if (credit.freq === 'Annual' || credit.freq === 'Every 4 Years') {
                         const stateKey = `Annual_${bank}_${displayName}_${credit.name}_${currentYear}`;
                         if (creditStates[stateKey] === true) {
@@ -1007,7 +1830,18 @@
                 else if (netValue < 300) valueStatus = 'marginal';
                 else if (netValue < 1000) valueStatus = 'good';
 
-                cardSummaries.push({bank, displayName, available: cardAvailable, redeemed: cardRedeemed, unused: cardUnused, total: cardTotal, annualFee, netValue, valueStatus});
+                cardSummaries.push({
+                    bank,
+                    displayName,
+                    available: cardAvailable,
+                    redeemed: cardRedeemed,
+                    unused: cardUnused,
+                    total: cardTotal,
+                    annualFee: annualFee,
+                    netValue: netValue,
+                    valueStatus: valueStatus
+                });
+
                 grandTotal.available += cardAvailable;
                 grandTotal.redeemed += cardRedeemed;
                 grandTotal.unused += cardUnused;
@@ -1015,16 +1849,60 @@
                 grandTotal.fees += annualFee;
             });
 
+            // Generate HTML
             let html = '';
             cardSummaries.forEach(card => {
                 const bgColor = card.valueStatus === 'negative' ? '#ffe6e6' : card.valueStatus === 'marginal' ? '#fff3cd' : '#e8f8f5';
                 const textColor = card.valueStatus === 'negative' ? '#c0392b' : card.valueStatus === 'marginal' ? '#f39c12' : '#27ae60';
                 const statusText = card.valueStatus === 'negative' ? '✗ Not worth it' : card.valueStatus === 'marginal' ? '⚠ Marginal value' : card.valueStatus === 'good' ? '✓ Worth keeping' : '✓ Excellent value';
-                html += `<div style="background: white; border: 0.5px solid #ddd; border-radius: 8px; padding: 1.25rem;"><div style="font-weight: 500; font-size: 15px; margin-bottom: 4px;">${card.bank}</div><div style="font-weight: 500; font-size: 14px; margin-bottom: 16px; color: #666;">${card.displayName}</div><div style="font-size: 12px; color: #888; margin-bottom: 16px;">Annual Fee: $${card.annualFee}</div><div style="display: flex; flex-direction: column; gap: 12px;"><div><div style="font-size: 12px; color: #888; margin-bottom: 4px;">Total Credits</div><div style="font-size: 20px; font-weight: 500; color: #3498db;">$${card.total}</div></div><div><div style="font-size: 12px; color: #888; margin-bottom: 4px;">Annual Fee</div><div style="font-size: 18px; font-weight: 500; color: #e74c3c;">-$${card.annualFee}</div></div><div style="background: ${bgColor}; padding: 12px; border-radius: 4px;"><div style="font-size: 12px; color: #888; margin-bottom: 4px;">Net Value</div><div style="font-size: 22px; font-weight: 600; color: ${textColor};">$${card.netValue}</div><div style="font-size: 11px; color: ${textColor}; margin-top: 4px;">${statusText}</div></div></div></div>`;
+                
+                html += `
+                    <div style="background: white; border: 0.5px solid #ddd; border-radius: 8px; padding: 1.25rem;">
+                        <div style="font-weight: 500; font-size: 15px; margin-bottom: 4px;">${card.bank}</div>
+                        <div style="font-weight: 500; font-size: 14px; margin-bottom: 16px; color: #666;">${card.displayName}</div>
+                        <div style="font-size: 12px; color: #888; margin-bottom: 16px;">Annual Fee: $${card.annualFee}</div>
+                        <div style="display: flex; flex-direction: column; gap: 12px;">
+                            <div>
+                                <div style="font-size: 12px; color: #888; margin-bottom: 4px;">Total Credits</div>
+                                <div style="font-size: 20px; font-weight: 500; color: #3498db;">$${card.total}</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 12px; color: #888; margin-bottom: 4px;">Annual Fee</div>
+                                <div style="font-size: 18px; font-weight: 500; color: #e74c3c;">-$${card.annualFee}</div>
+                            </div>
+                            <div style="background: ${bgColor}; padding: 12px; border-radius: 4px; margin: -6px -6px -6px -6px; padding: 12px;">
+                                <div style="font-size: 12px; color: #888; margin-bottom: 4px;">Net Value</div>
+                                <div style="font-size: 22px; font-weight: 600; color: ${textColor};">$${card.netValue}</div>
+                                <div style="font-size: 11px; color: ${textColor}; margin-top: 4px;">${statusText}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
             });
 
+            // Add grand total card
             const grandNetValue = grandTotal.total - grandTotal.fees;
-            html += `<div style="background: white; border: 0.5px solid #ddd; border-radius: 8px; padding: 1.25rem; background: #f9f9f9;"><div style="font-weight: 600; font-size: 15px; margin-bottom: 4px;">ALL CARDS TOTAL</div><div style="font-size: 12px; color: #888; margin-bottom: 16px;">Total Annual Fees: $${grandTotal.fees}</div><div style="display: flex; flex-direction: column; gap: 12px;"><div><div style="font-size: 12px; color: #888; margin-bottom: 4px;">Total Credits</div><div style="font-size: 20px; font-weight: 500; color: #3498db;">$${grandTotal.total}</div></div><div><div style="font-size: 12px; color: #888; margin-bottom: 4px;">Total Fees</div><div style="font-size: 18px; font-weight: 500; color: #e74c3c;">-$${grandTotal.fees}</div></div><div style="background: #e8f8f5; padding: 12px; border-radius: 4px;"><div style="font-size: 12px; color: #888; margin-bottom: 4px;">Net Value</div><div style="font-size: 22px; font-weight: 600; color: #27ae60;">$${grandNetValue}</div><div style="font-size: 11px; color: #27ae60; margin-top: 4px;">✓ Strong portfolio value</div></div></div></div>`;
+            html += `
+                <div style="background: white; border: 0.5px solid #ddd; border-radius: 8px; padding: 1.25rem; background: #f9f9f9;">
+                    <div style="font-weight: 600; font-size: 15px; margin-bottom: 4px;">ALL CARDS TOTAL</div>
+                    <div style="font-size: 12px; color: #888; margin-bottom: 16px;">Total Annual Fees: $${grandTotal.fees}</div>
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                        <div>
+                            <div style="font-size: 12px; color: #888; margin-bottom: 4px;">Total Credits</div>
+                            <div style="font-size: 20px; font-weight: 500; color: #3498db;">$${grandTotal.total}</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 12px; color: #888; margin-bottom: 4px;">Total Fees</div>
+                            <div style="font-size: 18px; font-weight: 500; color: #e74c3c;">-$${grandTotal.fees}</div>
+                        </div>
+                        <div style="background: #e8f8f5; padding: 12px; border-radius: 4px; margin: -6px -6px -6px -6px; padding: 12px;">
+                            <div style="font-size: 12px; color: #888; margin-bottom: 4px;">Net Value</div>
+                            <div style="font-size: 22px; font-weight: 600; color: #27ae60;">$${grandNetValue}</div>
+                            <div style="font-size: 11px; color: #27ae60; margin-top: 4px;">✓ Strong portfolio value</div>
+                        </div>
+                    </div>
+                </div>
+            `;
 
             document.getElementById('summaryContainer').innerHTML = html;
         }
@@ -1049,7 +1927,9 @@
                 const bank = selects[0].value;
                 const card = selects[1].value;
                 const nickname = input ? input.value : '';
-                if (bank && card) cards.push({bank, card, nickname});
+                if (bank && card) {
+                    cards.push({bank, card, nickname});
+                }
             });
 
             let allCredits = [];
@@ -1058,19 +1938,35 @@
                 const credits = creditData[bank]?.[card] || [];
                 credits.forEach(credit => {
                     let stateKey;
-                    if (credit.freq === 'Monthly') stateKey = `Monthly_${bank}_${displayName}_${credit.name}_${currentMonth}`;
-                    else if (credit.freq === 'Quarterly') stateKey = `Quarterly_${bank}_${displayName}_${credit.name}_Q${currentQuarter + 1}`;
-                    else if (credit.freq === 'Semi-Annual') stateKey = `Semi-Annual_${bank}_${displayName}_${credit.name}_H${currentHalf}`;
-                    else if (credit.freq === 'Annual' || credit.freq === 'Every 4 Years') stateKey = `Annual_${bank}_${displayName}_${credit.name}_${currentYear}`;
+                    if (credit.freq === 'Monthly') {
+                        stateKey = `Monthly_${bank}_${displayName}_${credit.name}_${currentMonth}`;
+                    } else if (credit.freq === 'Quarterly') {
+                        stateKey = `Quarterly_${bank}_${displayName}_${credit.name}_Q${currentQuarter + 1}`;
+                    } else if (credit.freq === 'Semi-Annual') {
+                        stateKey = `Semi-Annual_${bank}_${displayName}_${credit.name}_H${currentHalf}`;
+                    } else if (credit.freq === 'Annual' || credit.freq === 'Every 4 Years') {
+                        stateKey = `Annual_${bank}_${displayName}_${credit.name}_${currentYear}`;
+                    }
 
                     const isChecked = creditStates[stateKey] === true;
                     let status = isChecked ? 'redeemed' : 'available';
-                    allCredits.push({bank, displayName, creditName: credit.name, amount: credit.amount, freq: credit.freq, status});
+
+                    allCredits.push({
+                        bank,
+                        displayName,
+                        creditName: credit.name,
+                        amount: credit.amount,
+                        freq: credit.freq,
+                        status: status
+                    });
                 });
             });
 
+            // Filter based on search and status
             let filtered = allCredits.filter(c => {
-                const matchesSearch = searchTerm === '' || c.creditName.toLowerCase().includes(searchTerm) || c.displayName.toLowerCase().includes(searchTerm);
+                const matchesSearch = searchTerm === '' || 
+                    c.creditName.toLowerCase().includes(searchTerm) || 
+                    c.displayName.toLowerCase().includes(searchTerm);
                 const matchesStatus = statusFilter === '' || c.status === statusFilter;
                 return matchesSearch && matchesStatus;
             });
@@ -1092,8 +1988,70 @@
             }
 
             resultsDiv.style.display = 'block';
-            resultsBody.innerHTML = filtered.map(c => `<tr style="border-bottom: 1px solid #ddd;"><td style="padding: 8px;"><strong>${c.bank}</strong></td><td style="padding: 8px;">${c.displayName}</td><td style="padding: 8px; text-align: center;">${c.creditName}</td><td style="padding: 8px; text-align: center; font-size: 12px;">${c.freq}</td><td style="padding: 8px; text-align: right; font-weight: 600;">$${c.amount}</td><td style="padding: 8px; text-align: center;"><span style="display: inline-block; padding: 3px 8px; border-radius: 3px; font-size: 11px; font-weight: 600; background: ${c.status === 'redeemed' ? '#27ae60' : '#3498db'}; color: white;">${c.status === 'redeemed' ? 'Redeemed' : 'Available'}</span></td></tr>`).join('');
+            resultsBody.innerHTML = filtered.map(c => `
+                <tr style="border-bottom: 1px solid #ddd;">
+                    <td style="padding: 8px;"><strong>${c.bank}</strong></td>
+                    <td style="padding: 8px;">${c.displayName}</td>
+                    <td style="padding: 8px; text-align: center;">${c.creditName}</td>
+                    <td style="padding: 8px; text-align: center; font-size: 12px;">${c.freq}</td>
+                    <td style="padding: 8px; text-align: right; font-weight: 600;">$${c.amount}</td>
+                    <td style="padding: 8px; text-align: center;">
+                        <span style="display: inline-block; padding: 3px 8px; border-radius: 3px; font-size: 11px; font-weight: 600; background: ${c.status === 'redeemed' ? '#27ae60' : '#3498db'}; color: white;">
+                            ${c.status === 'redeemed' ? 'Redeemed' : 'Available'}
+                        </span>
+                    </td>
+                </tr>
+            `).join('');
+            
             resultsInfo.innerHTML = `Showing ${filtered.length} result${filtered.length !== 1 ? 's' : ''}`;
+        }
+
+        function autoSaveCheckboxState(row) {
+            const monthSelect = document.getElementById('month');
+            const currentMonthIndex = monthSelect.selectedIndex;
+            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+            const currentMonth = monthNames[currentMonthIndex];
+            const currentQuarter = Math.floor(currentMonthIndex / 3);
+            const currentHalf = currentMonthIndex < 6 ? 1 : 2;
+            const currentYear = new Date().getFullYear();
+            
+            const checkbox = row.querySelector('input[type="checkbox"]');
+            const amountInput = row.querySelector('input[type="number"]:not([type="checkbox"])');
+            
+            // Get custom amount if it exists and is different from full amount
+            let stateValue = false;
+            if (checkbox.checked) {
+                if (amountInput && amountInput.value) {
+                    const customAmount = parseInt(amountInput.value);
+                    const fullAmount = parseInt(amountInput.getAttribute('data-fullAmount') || checkbox.getAttribute('data-amount'));
+                    // Store custom amount if different, otherwise store 'full'
+                    stateValue = customAmount !== fullAmount ? customAmount : 'full';
+                } else {
+                    stateValue = 'full';
+                }
+            } else {
+                stateValue = false;
+            }
+            
+            const bankCell = row.querySelector('td:nth-child(2)').textContent.trim();
+            const cardCell = row.querySelector('td:nth-child(3)').textContent.trim();
+            const creditCell = row.querySelector('td:nth-child(4)').textContent.trim();
+            const freqCell = row.querySelector('td:nth-child(6)').textContent.trim();
+            
+            let stateKey;
+            if (freqCell === 'Monthly') {
+                stateKey = `Monthly_${bankCell}_${cardCell}_${creditCell}_${currentMonth}`;
+            } else if (freqCell === 'Quarterly') {
+                stateKey = `Quarterly_${bankCell}_${cardCell}_${creditCell}_Q${currentQuarter + 1}`;
+            } else if (freqCell === 'Semi-Annual') {
+                stateKey = `Semi-Annual_${bankCell}_${cardCell}_${creditCell}_H${currentHalf}`;
+            } else if (freqCell === 'Annual' || freqCell === 'Every 4 Years') {
+                stateKey = `Annual_${bankCell}_${cardCell}_${creditCell}_${currentYear}`;
+            }
+            
+            const creditStates = JSON.parse(localStorage.getItem('creditStates') || '{}');
+            creditStates[stateKey] = stateValue;
+            localStorage.setItem('creditStates', JSON.stringify(creditStates));
         }
 
         function updateTallies() {
@@ -1101,19 +2059,15 @@
             let redeemed = 0;
             let unused = 0;
 
-            const today = new Date();
-            const actualCurrentMonth = today.getMonth();
-            const actualCurrentYear = today.getFullYear();
-            const actualCurrentQuarter = Math.floor(actualCurrentMonth / 3) + 1;
-            const actualCurrentHalf = actualCurrentMonth < 6 ? 1 : 2;
-
             const monthSelect = document.getElementById('month');
-            const selectedMonthIndex = monthSelect.selectedIndex;
+            const currentMonthIndex = monthSelect.selectedIndex;
             const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-            const selectedMonth = monthNames[selectedMonthIndex];
-            const selectedQuarter = Math.floor(selectedMonthIndex / 3) + 1;
-            const selectedHalf = selectedMonthIndex < 6 ? 1 : 2;
+            const currentMonth = monthNames[currentMonthIndex];
+            const currentQuarter = Math.floor(currentMonthIndex / 3);
+            const currentHalf = currentMonthIndex < 6 ? 1 : 2;
+            const currentYear = new Date().getFullYear();
 
+            // Save current checkbox states and custom amounts
             const allCheckboxes = document.querySelectorAll('.results-table input[type="checkbox"]');
             allCheckboxes.forEach(checkbox => {
                 const row = checkbox.closest('tr');
@@ -1122,26 +2076,28 @@
                 const amountInput = row.querySelector('input[type="number"]:not([type="checkbox"])');
                 const customAmount = amountInput && amountInput.value ? parseInt(amountInput.value) : null;
 
+                // Save state to localStorage with appropriate key based on frequency
                 const bankCell = row.querySelector('td:nth-child(2)').textContent.trim();
                 const cardCell = row.querySelector('td:nth-child(3)').textContent.trim();
                 const creditCell = row.querySelector('td:nth-child(4)').textContent.trim();
-
+                
                 let stateKey;
                 if (freq === 'Monthly') {
-                    stateKey = `Monthly_${bankCell}_${cardCell}_${creditCell}_${selectedMonth}`;
+                    stateKey = `Monthly_${bankCell}_${cardCell}_${creditCell}_${currentMonth}`;
                 } else if (freq === 'Quarterly') {
-                    stateKey = `Quarterly_${bankCell}_${cardCell}_${creditCell}_Q${selectedQuarter}`;
+                    stateKey = `Quarterly_${bankCell}_${cardCell}_${creditCell}_Q${currentQuarter + 1}`;
                 } else if (freq === 'Semi-Annual') {
-                    stateKey = `Semi-Annual_${bankCell}_${cardCell}_${creditCell}_H${selectedHalf}`;
+                    stateKey = `Semi-Annual_${bankCell}_${cardCell}_${creditCell}_H${currentHalf}`;
                 } else if (freq === 'Annual' || freq === 'Every 4 Years') {
-                    stateKey = `Annual_${bankCell}_${cardCell}_${creditCell}_${actualCurrentYear}`;
+                    stateKey = `Annual_${bankCell}_${cardCell}_${creditCell}_${currentYear}`;
                 }
-
+                
                 const creditStates = JSON.parse(localStorage.getItem('creditStates') || '{}');
                 creditStates[stateKey] = checkbox.checked ? (customAmount || 'full') : false;
                 localStorage.setItem('creditStates', JSON.stringify(creditStates));
             });
 
+            // Get all cards
             const creditStates = JSON.parse(localStorage.getItem('creditStates') || '{}');
             const rows = document.querySelectorAll('#cardsBody tr');
             const cards = [];
@@ -1151,26 +2107,32 @@
                 const bank = selects[0].value;
                 const card = selects[1].value;
                 const nickname = inputs[0] ? inputs[0].value : '';
-                if (bank && card) cards.push({bank, card, nickname});
+                if (bank && card) {
+                    cards.push({bank, card, nickname});
+                }
             });
 
+            // Calculate tallies by counting each credit instance separately
             cards.forEach(({bank, card, nickname}) => {
                 const displayName = nickname ? `${card} (${nickname})` : card;
                 const credits = creditData[bank]?.[card] || [];
-
+                
                 credits.forEach(credit => {
                     if (credit.freq === 'Monthly') {
+                        // Each month is a separate instance
                         for (let m = 0; m < 12; m++) {
                             const stateKey = `Monthly_${bank}_${displayName}_${credit.name}_${monthNames[m]}`;
                             const state = creditStates[stateKey];
                             const isChecked = state === true || (typeof state === 'number') || state === 'full';
                             const customAmount = (typeof state === 'number') ? state : credit.amount;
-                            const hasExpired = m < actualCurrentMonth;
-
+                            const hasExpired = m < currentMonthIndex; // Past months have expired
+                            
                             if (isChecked) {
                                 redeemed += customAmount;
                                 const remaining = credit.amount - customAmount;
-                                if (remaining > 0) unused += remaining;
+                                if (remaining > 0) {
+                                    unused += remaining;
+                                }
                             } else if (hasExpired) {
                                 unused += credit.amount;
                             } else {
@@ -1178,17 +2140,20 @@
                             }
                         }
                     } else if (credit.freq === 'Quarterly') {
+                        // Each quarter is a separate instance
                         for (let q = 1; q <= 4; q++) {
                             const stateKey = `Quarterly_${bank}_${displayName}_${credit.name}_Q${q}`;
                             const state = creditStates[stateKey];
                             const isChecked = state === true || (typeof state === 'number') || state === 'full';
                             const customAmount = (typeof state === 'number') ? state : credit.amount;
-                            const hasExpired = q < actualCurrentQuarter;
-
+                            const hasExpired = q <= currentQuarter; // Past quarters have expired
+                            
                             if (isChecked) {
                                 redeemed += customAmount;
                                 const remaining = credit.amount - customAmount;
-                                if (remaining > 0) unused += remaining;
+                                if (remaining > 0) {
+                                    unused += remaining;
+                                }
                             } else if (hasExpired) {
                                 unused += credit.amount;
                             } else {
@@ -1196,17 +2161,20 @@
                             }
                         }
                     } else if (credit.freq === 'Semi-Annual') {
+                        // Each half is a separate instance
                         for (let h = 1; h <= 2; h++) {
                             const stateKey = `Semi-Annual_${bank}_${displayName}_${credit.name}_H${h}`;
                             const state = creditStates[stateKey];
                             const isChecked = state === true || (typeof state === 'number') || state === 'full';
                             const customAmount = (typeof state === 'number') ? state : credit.amount;
-                            const hasExpired = h < actualCurrentHalf;
-
+                            const hasExpired = h < currentHalf; // Past halves have expired
+                            
                             if (isChecked) {
                                 redeemed += customAmount;
                                 const remaining = credit.amount - customAmount;
-                                if (remaining > 0) unused += remaining;
+                                if (remaining > 0) {
+                                    unused += remaining;
+                                }
                             } else if (hasExpired) {
                                 unused += credit.amount;
                             } else {
@@ -1214,15 +2182,18 @@
                             }
                         }
                     } else if (credit.freq === 'Annual' || credit.freq === 'Every 4 Years') {
-                        const stateKey = `Annual_${bank}_${displayName}_${credit.name}_${actualCurrentYear}`;
+                        // Annual credits - one instance per year
+                        const stateKey = `Annual_${bank}_${displayName}_${credit.name}_${currentYear}`;
                         const state = creditStates[stateKey];
                         const isChecked = state === true || (typeof state === 'number') || state === 'full';
                         const customAmount = (typeof state === 'number') ? state : credit.amount;
-
+                        
                         if (isChecked) {
                             redeemed += customAmount;
                             const remaining = credit.amount - customAmount;
-                            if (remaining > 0) unused += remaining;
+                            if (remaining > 0) {
+                                unused += remaining;
+                            }
                         } else {
                             available += credit.amount;
                         }
@@ -1230,34 +2201,49 @@
                 });
             });
 
+            // Update the display
             document.getElementById('availableTotal').textContent = available;
             document.getElementById('redeemedTotal').textContent = redeemed;
             document.getElementById('unusedTotal').textContent = unused;
 
+            // Calculate year-to-date progress
             const totalCredits = available + redeemed + unused;
             const pacePercentage = totalCredits > 0 ? Math.round((redeemed / totalCredits) * 100) : 0;
-
+            
             document.getElementById('pacePercentage').textContent = pacePercentage;
             document.getElementById('paceAmount').textContent = redeemed;
             document.getElementById('totalCredits').textContent = totalCredits;
             document.getElementById('paceBar').style.width = pacePercentage + '%';
         }
 
+        // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             updateCurrentDate();
+            
+            // Set month dropdown to current month
+            const today = new Date();
+            const currentMonth = today.getMonth(); // 0-11
+            const monthSelect = document.getElementById('month');
+            monthSelect.selectedIndex = currentMonth;
+            
             const saved = localStorage.getItem('cards');
-            if (!saved || JSON.parse(saved).length === 0) addCard();
+            if (!saved || JSON.parse(saved).length === 0) {
+                addCard();
+            }
             loadCards();
             updateResults();
             checkExpiringCredits();
         });
 
+        // Update card options when bank changes
         document.addEventListener('change', function(e) {
             if (e.target.tagName === 'SELECT') {
                 const row = e.target.closest('tr');
                 if (row && row.parentElement.id === 'cardsBody') {
                     const bankSelect = row.querySelectorAll('select')[0];
-                    if (e.target === bankSelect) updateCardOptions(row);
+                    if (e.target === bankSelect) {
+                        updateCardOptions(row);
+                    }
                 }
             }
         });
