@@ -182,7 +182,7 @@
         }
         .tallies-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 20px;
         }
         .tally-box {
@@ -210,8 +210,101 @@
             color: #95a5a6;
             margin-top: 5px;
         }
+
+        /* MOBILE RESPONSIVE */
+        @media (max-width: 768px) {
+            .container {
+                border-radius: 0;
+            }
+            header {
+                padding: 20px;
+            }
+            h1 {
+                font-size: 24px;
+            }
+            .content {
+                padding: 20px;
+            }
+            .tallies-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            .tally-box {
+                padding: 15px;
+            }
+            .tally-amount {
+                font-size: 28px;
+            }
+            .results-table {
+                font-size: 12px;
+            }
+            .results-table th,
+            .results-table td {
+                padding: 8px 6px;
+            }
+            .section-header {
+                padding: 12px 15px;
+                font-size: 12px;
+                margin: 20px 0 15px 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header {
+                display: block;
+                text-align: center;
+                padding: 15px;
+            }
+            #expirationBadge {
+                margin-top: 10px;
+                display: block !important;
+            }
+            h1 {
+                font-size: 20px;
+                margin-bottom: 10px;
+            }
+            .content {
+                padding: 15px;
+            }
+            .tallies-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+            .tally-box {
+                padding: 12px;
+            }
+            .tally-label {
+                font-size: 11px;
+            }
+            .tally-amount {
+                font-size: 24px;
+            }
+            .results-table {
+                font-size: 11px;
+            }
+            .results-table th,
+            .results-table td {
+                padding: 6px 4px;
+            }
+            .add-btn {
+                padding: 10px 16px;
+                font-size: 13px;
+            }
+            .remove-btn {
+                padding: 6px 10px;
+                font-size: 11px;
+            }
+            .month-select select,
+            .filter-section select {
+                padding: 6px;
+                font-size: 13px;
+            }
+            #searchInput {
+                padding: 8px !important;
+                font-size: 13px !important;
+            }
+        }
     </style>
-</head>
 <body>
     <div class="container">
         <header style="display: flex; justify-content: space-between; align-items: center;">
