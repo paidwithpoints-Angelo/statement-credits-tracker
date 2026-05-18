@@ -304,28 +304,58 @@
                 display: block;
                 overflow-x: auto;
                 -webkit-overflow-scrolling: touch;
+                width: 100%;
             }
-            .results-table thead,
-            .results-table tbody,
+            .results-table thead {
+                display: table;
+                width: 100%;
+                table-layout: fixed;
+            }
+            .results-table tbody {
+                display: table;
+                width: 100%;
+                table-layout: fixed;
+            }
             .results-table tr {
-                display: block;
+                display: table-row;
             }
             .results-table th,
             .results-table td {
                 padding: 6px 4px;
-                display: inline-block;
-                width: auto;
-                min-width: 50px;
+                display: table-cell;
+                text-align: left;
+                word-break: break-word;
+                border-bottom: 1px solid #e9ecef;
             }
             .results-table th:nth-child(1),
             .results-table td:nth-child(1) {
-                width: 35px;
-                min-width: 35px;
+                width: 40px;
+            }
+            .results-table th:nth-child(2),
+            .results-table td:nth-child(2) {
+                width: 80px;
+            }
+            .results-table th:nth-child(3),
+            .results-table td:nth-child(3) {
+                width: 90px;
+            }
+            .results-table th:nth-child(4),
+            .results-table td:nth-child(4) {
+                width: 80px;
+            }
+            .results-table th:nth-child(5),
+            .results-table td:nth-child(5) {
+                width: 60px;
+                text-align: right;
+            }
+            .results-table th:nth-child(6),
+            .results-table td:nth-child(6) {
+                width: 75px;
             }
             .results-table th:nth-child(7),
             .results-table td:nth-child(7) {
-                width: 60px;
-                min-width: 60px;
+                width: 65px;
+                text-align: center;
             }
             .remove-btn {
                 padding: 6px 10px;
