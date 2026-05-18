@@ -164,8 +164,6 @@
             padding: 40px;
             font-style: italic;
         }
-
-        /* Mobile responsive - stack tables */
         @media (max-width: 768px) {
             .results-table {
                 font-size: 12px;
@@ -183,7 +181,6 @@
                 display: none;
             }
         }
-
         @media (max-width: 480px) {
             .cards-table {
                 font-size: 12px;
@@ -199,12 +196,10 @@
                 padding: 6px !important;
                 font-size: 12px !important;
             }
-            
             .cards-table th:nth-child(4),
             .cards-table td:nth-child(4) {
                 display: none;
             }
-            
             .results-table th {
                 padding: 6px;
                 font-size: 11px;
@@ -214,7 +209,6 @@
                 font-size: 11px;
             }
         }
-
         .tallies-container {
             background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%);
             border: 2px solid #27ae60;
@@ -272,7 +266,6 @@
         </header>
         <div class="content">
             <div class="section-header">STEP 1: ADD YOUR CARDS</div>
-            
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                 <button class="add-btn" onclick="addCard()">+ Add Another Card</button>
                 <div style="display: flex; gap: 10px;">
@@ -280,7 +273,6 @@
                     <button style="padding: 12px 24px; background: #e74c3c; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 14px;" onclick="resetAllData()">🔄 Reset for New Year</button>
                 </div>
             </div>
-
             <div id="expirationModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
                 <div style="background: white; border-radius: 8px; padding: 2rem; max-width: 500px; width: 90%;">
                     <div style="font-weight: 600; font-size: 18px; margin-bottom: 1.5rem;">Credits Expiring Soon</div>
@@ -288,7 +280,6 @@
                     <button onclick="closeExpirationModal()" style="width: 100%; padding: 10px; background: #ddd; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">Close</button>
                 </div>
             </div>
-
             <table class="cards-table">
                 <thead>
                     <tr>
@@ -301,7 +292,6 @@
                 </thead>
                 <tbody id="cardsBody"></tbody>
             </table>
-
             <div class="section-header">STEP 2: SELECT MONTH</div>
             <div class="month-select">
                 <label for="month">Month:</label>
@@ -320,7 +310,6 @@
                     <option>December</option>
                 </select>
             </div>
-
             <div class="filter-section">
                 <strong>Credit Types:</strong><br><br>
                 <label><input type="checkbox" id="monthly" checked onchange="updateResults()"> Monthly</label>
@@ -328,7 +317,6 @@
                 <label><input type="checkbox" id="semiannual" checked onchange="updateResults()"> Semi-Annual</label>
                 <label><input type="checkbox" id="annual" checked onchange="updateResults()"> Annual</label>
             </div>
-
             <div class="filter-section" style="margin-top: 30px;">
                 <strong>Search & Filter:</strong><br><br>
                 <div style="display: flex; gap: 12px; margin-bottom: 15px; align-items: center;">
@@ -356,7 +344,6 @@
                     <div id="searchResultsInfo" style="margin-top: 12px; font-size: 12px; color: #666; text-align: center;"></div>
                 </div>
             </div>
-
             <div class="tallies-container">
                 <div class="tallies-header">CREDIT TALLIES</div>
                 <div class="tallies-grid">
@@ -374,7 +361,6 @@
                     </div>
                 </div>
             </div>
-
             <div style="background: white; border: 0.5px solid #ddd; border-radius: 8px; padding: 1.25rem; margin-bottom: 30px;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
                     <div style="font-weight: 500; font-size: 15px;">Year-to-Date Progress</div>
@@ -385,23 +371,19 @@
                 </div>
                 <div style="font-size: 13px; color: #888;">$<span id="paceAmount">0</span> redeemed of $<span id="totalCredits">0</span> total annual credits</div>
             </div>
-
             <div style="margin: 30px 0; display: flex; gap: 10px;">
                 <button onclick="toggleView('credits')" id="creditsViewBtn" style="padding: 12px 24px; background: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">Credits by Month</button>
                 <button onclick="toggleView('summary')" id="summaryViewBtn" style="padding: 12px 24px; background: transparent; color: #3498db; border: 1px solid #3498db; border-radius: 4px; cursor: pointer; font-weight: 600;">Card Summary</button>
                 <button onclick="toggleView('history')" id="historyViewBtn" style="padding: 12px 24px; background: transparent; color: #3498db; border: 1px solid #3498db; border-radius: 4px; cursor: pointer; font-weight: 600;">Annual History</button>
             </div>
-
             <div class="results-container" id="creditsView">
                 <div class="results-header">YOUR AVAILABLE CREDITS</div>
                 <div id="resultsTable"></div>
             </div>
-
             <div id="summaryView" style="display: none;">
                 <div class="results-header">CARD SUMMARY</div>
                 <div id="summaryContainer" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-top: 20px;"></div>
             </div>
-
             <div id="historyView" style="display: none;">
                 <div style="background: white; border: 0.5px solid #ddd; border-radius: 8px; padding: 1.25rem; margin-bottom: 20px;">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -425,13 +407,7 @@
             const tbody = document.getElementById('cardsBody');
             const row = document.createElement('tr');
             row.id = 'card-' + cardCount;
-            row.innerHTML = `
-                <td><select onchange="saveCards(); updateResults();"><option value="">-- Bank --</option><option value="Chase">Chase</option><option value="American Express">AMEX</option><option value="Capital One">Capital One</option><option value="Citi">Citi</option><option value="Bilt">Bilt</option><option value="Bank of America">Bank of America</option></select></td>
-                <td><select onchange="saveCards(); updateResults();"><option value="">-- Card --</option></select></td>
-                <td><input type="text" placeholder="Nickname (optional)" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;" onchange="saveCards();"></td>
-                <td style="text-align: center;"><input type="number" placeholder="$0" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; text-align: center;" onchange="saveCards();" min="0"></td>
-                <td style="text-align: right;"><button class="remove-btn" onclick="removeCard('card-${cardCount}')">Remove</button></td>
-            `;
+            row.innerHTML = `<td><select onchange="saveCards(); updateResults();"><option value="">-- Bank --</option><option value="Chase">Chase</option><option value="American Express">AMEX</option><option value="Capital One">Capital One</option><option value="Citi">Citi</option><option value="Bilt">Bilt</option><option value="Bank of America">Bank of America</option></select></td><td><select onchange="saveCards(); updateResults();"><option value="">-- Card --</option></select></td><td><input type="text" placeholder="Nickname (optional)" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;" onchange="saveCards();"></td><td style="text-align: center;"><input type="number" placeholder="$0" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; text-align: center;" onchange="saveCards();" min="0"></td><td style="text-align: right;"><button class="remove-btn" onclick="removeCard('card-${cardCount}')">Remove</button></td>`;
             tbody.appendChild(row);
         }
 
@@ -451,9 +427,7 @@
                 const card = selects[1].value;
                 const nickname = inputs[0] ? inputs[0].value : '';
                 const annualFee = inputs[1] ? parseInt(inputs[1].value) || 0 : 0;
-                if (bank && card) {
-                    cards.push({bank, card, nickname, annualFee});
-                }
+                if (bank && card) cards.push({bank, card, nickname, annualFee});
             });
             localStorage.setItem('cards', JSON.stringify(cards));
         }
@@ -483,14 +457,12 @@
             const bank = selects[0].value;
             const cardSelect = selects[1];
             cardSelect.innerHTML = '<option value="">-- Card --</option>';
-            if (bank && cardData[bank]) {
-                cardData[bank].forEach(card => {
-                    const option = document.createElement('option');
-                    option.value = card;
-                    option.textContent = card;
-                    cardSelect.appendChild(option);
-                });
-            }
+            if (bank && cardData[bank]) cardData[bank].forEach(card => {
+                const option = document.createElement('option');
+                option.value = card;
+                option.textContent = card;
+                cardSelect.appendChild(option);
+            });
         }
 
         function updateResults() {
@@ -502,9 +474,7 @@
                 const bank = selects[0].value;
                 const card = selects[1].value;
                 const nickname = textInput ? textInput.value : '';
-                if (bank && card) {
-                    cards.push({bank, card, nickname});
-                }
+                if (bank && card) cards.push({bank, card, nickname});
             });
 
             if (cards.length === 0) {
@@ -514,7 +484,6 @@
             }
 
             const creditsByFreq = {'Monthly': [], 'Quarterly': [], 'Semi-Annual': [], 'Annual': []};
-
             cards.forEach(({bank, card, nickname}) => {
                 const credits = creditData[bank]?.[card] || [];
                 credits.forEach(credit => {
@@ -522,17 +491,14 @@
                     const quarterly = document.getElementById('quarterly').checked;
                     const semiannual = document.getElementById('semiannual').checked;
                     const annual = document.getElementById('annual').checked;
-
                     let show = false;
                     if (credit.freq === 'Monthly') show = monthly;
                     else if (credit.freq === 'Quarterly') show = quarterly;
                     else if (credit.freq === 'Semi-Annual') show = semiannual;
                     else if (credit.freq === 'Annual' || credit.freq === 'Every 4 Years') show = annual;
-
                     if (show) {
                         const displayName = nickname ? `${card} (${nickname})` : card;
                         const creditObj = {bank, card, displayName, name: credit.name, amount: credit.amount, freq: credit.freq};
-
                         if (credit.freq === 'Monthly') creditsByFreq['Monthly'].push(creditObj);
                         else if (credit.freq === 'Quarterly') creditsByFreq['Quarterly'].push(creditObj);
                         else if (credit.freq === 'Semi-Annual') creditsByFreq['Semi-Annual'].push(creditObj);
@@ -554,7 +520,7 @@
             });
 
             document.getElementById('resultsTable').innerHTML = html || '<div class="empty-message">Select cards to see available credits</div>';
-            
+
             const monthSelect = document.getElementById('month');
             const currentMonthIndex = monthSelect.selectedIndex;
             const currentQuarter = Math.floor(currentMonthIndex / 3);
@@ -571,9 +537,7 @@
                 const bank = selects[0].value;
                 const card = selects[1].value;
                 const nickname = input ? input.value : '';
-                if (bank && card) {
-                    restoreCards.push({bank, card, nickname});
-                }
+                if (bank && card) restoreCards.push({bank, card, nickname});
             });
 
             restoreCards.forEach(({bank, card, nickname}) => {
@@ -591,7 +555,6 @@
                     } else if (credit.freq === 'Annual' || credit.freq === 'Every 4 Years') {
                         stateKey = `Annual_${bank}_${displayName}_${credit.name}_${currentYear}`;
                     }
-
                     if (stateKey && creditStates[stateKey] === true) {
                         const allCheckboxes = document.querySelectorAll('.results-table input[type="checkbox"]');
                         allCheckboxes.forEach(checkbox => {
@@ -600,14 +563,12 @@
                             const cardCell = row.querySelector('td:nth-child(3)').textContent.trim();
                             const nameCell = row.querySelector('td:nth-child(4)').textContent.trim();
                             const freqCell = row.querySelector('td:nth-child(6)').textContent.trim();
-                            if (bankCell === bank && cardCell === displayName && nameCell === credit.name && freqCell === credit.freq) {
-                                checkbox.checked = true;
-                            }
+                            if (bankCell === bank && cardCell === displayName && nameCell === credit.name && freqCell === credit.freq) checkbox.checked = true;
                         });
                     }
                 });
             });
-            
+
             const allCheckboxes = document.querySelectorAll('.results-table input[type="checkbox"]');
             allCheckboxes.forEach(checkbox => {
                 checkbox.addEventListener('change', function() {
@@ -626,13 +587,13 @@
                     updateTallies();
                 });
             });
-            
+
             const amountInputs = document.querySelectorAll('.results-table input[type="number"]:not([type="checkbox"])');
             amountInputs.forEach(input => {
                 input.addEventListener('change', updateTallies);
                 input.addEventListener('input', updateTallies);
             });
-            
+
             updateTallies();
             checkExpiringCredits();
         }
@@ -830,7 +791,7 @@
                 creditStates[stateKey] = checkbox.checked;
             });
             localStorage.setItem('creditStates', JSON.stringify(creditStates));
-            
+
             const button = event.target;
             const originalText = button.textContent;
             button.textContent = '✓ Saved!';
@@ -848,14 +809,12 @@
             creditsView.style.display = 'none';
             summaryView.style.display = 'none';
             historyView.style.display = 'none';
-            
             document.getElementById('creditsViewBtn').style.background = 'transparent';
             document.getElementById('creditsViewBtn').style.color = '#3498db';
             document.getElementById('summaryViewBtn').style.background = 'transparent';
             document.getElementById('summaryViewBtn').style.color = '#3498db';
             document.getElementById('historyViewBtn').style.background = 'transparent';
             document.getElementById('historyViewBtn').style.color = '#3498db';
-
             if (view === 'credits') {
                 creditsView.style.display = 'block';
                 document.getElementById('creditsViewBtn').style.background = '#3498db';
@@ -1138,15 +1097,22 @@
         }
 
         function updateTallies() {
-            let available = 0, redeemed = 0, unused = 0;
+            let available = 0;
+            let redeemed = 0;
+            let unused = 0;
+
+            const today = new Date();
+            const actualCurrentMonth = today.getMonth();
+            const actualCurrentYear = today.getFullYear();
+            const actualCurrentQuarter = Math.floor(actualCurrentMonth / 3) + 1;
+            const actualCurrentHalf = actualCurrentMonth < 6 ? 1 : 2;
 
             const monthSelect = document.getElementById('month');
-            const currentMonthIndex = monthSelect.selectedIndex;
+            const selectedMonthIndex = monthSelect.selectedIndex;
             const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-            const currentMonth = monthNames[currentMonthIndex];
-            const currentQuarter = Math.floor(currentMonthIndex / 3);
-            const currentHalf = currentMonthIndex < 6 ? 1 : 2;
-            const currentYear = new Date().getFullYear();
+            const selectedMonth = monthNames[selectedMonthIndex];
+            const selectedQuarter = Math.floor(selectedMonthIndex / 3) + 1;
+            const selectedHalf = selectedMonthIndex < 6 ? 1 : 2;
 
             const allCheckboxes = document.querySelectorAll('.results-table input[type="checkbox"]');
             allCheckboxes.forEach(checkbox => {
@@ -1159,13 +1125,18 @@
                 const bankCell = row.querySelector('td:nth-child(2)').textContent.trim();
                 const cardCell = row.querySelector('td:nth-child(3)').textContent.trim();
                 const creditCell = row.querySelector('td:nth-child(4)').textContent.trim();
-                
+
                 let stateKey;
-                if (freq === 'Monthly') stateKey = `Monthly_${bankCell}_${cardCell}_${creditCell}_${currentMonth}`;
-                else if (freq === 'Quarterly') stateKey = `Quarterly_${bankCell}_${cardCell}_${creditCell}_Q${currentQuarter + 1}`;
-                else if (freq === 'Semi-Annual') stateKey = `Semi-Annual_${bankCell}_${cardCell}_${creditCell}_H${currentHalf}`;
-                else if (freq === 'Annual' || freq === 'Every 4 Years') stateKey = `Annual_${bankCell}_${cardCell}_${creditCell}_${currentYear}`;
-                
+                if (freq === 'Monthly') {
+                    stateKey = `Monthly_${bankCell}_${cardCell}_${creditCell}_${selectedMonth}`;
+                } else if (freq === 'Quarterly') {
+                    stateKey = `Quarterly_${bankCell}_${cardCell}_${creditCell}_Q${selectedQuarter}`;
+                } else if (freq === 'Semi-Annual') {
+                    stateKey = `Semi-Annual_${bankCell}_${cardCell}_${creditCell}_H${selectedHalf}`;
+                } else if (freq === 'Annual' || freq === 'Every 4 Years') {
+                    stateKey = `Annual_${bankCell}_${cardCell}_${creditCell}_${actualCurrentYear}`;
+                }
+
                 const creditStates = JSON.parse(localStorage.getItem('creditStates') || '{}');
                 creditStates[stateKey] = checkbox.checked ? (customAmount || 'full') : false;
                 localStorage.setItem('creditStates', JSON.stringify(creditStates));
@@ -1186,7 +1157,7 @@
             cards.forEach(({bank, card, nickname}) => {
                 const displayName = nickname ? `${card} (${nickname})` : card;
                 const credits = creditData[bank]?.[card] || [];
-                
+
                 credits.forEach(credit => {
                     if (credit.freq === 'Monthly') {
                         for (let m = 0; m < 12; m++) {
@@ -1194,8 +1165,8 @@
                             const state = creditStates[stateKey];
                             const isChecked = state === true || (typeof state === 'number') || state === 'full';
                             const customAmount = (typeof state === 'number') ? state : credit.amount;
-                            const hasExpired = m < currentMonthIndex;
-                            
+                            const hasExpired = m < actualCurrentMonth;
+
                             if (isChecked) {
                                 redeemed += customAmount;
                                 const remaining = credit.amount - customAmount;
@@ -1212,8 +1183,8 @@
                             const state = creditStates[stateKey];
                             const isChecked = state === true || (typeof state === 'number') || state === 'full';
                             const customAmount = (typeof state === 'number') ? state : credit.amount;
-                            const hasExpired = q <= currentQuarter;
-                            
+                            const hasExpired = q < actualCurrentQuarter;
+
                             if (isChecked) {
                                 redeemed += customAmount;
                                 const remaining = credit.amount - customAmount;
@@ -1230,8 +1201,8 @@
                             const state = creditStates[stateKey];
                             const isChecked = state === true || (typeof state === 'number') || state === 'full';
                             const customAmount = (typeof state === 'number') ? state : credit.amount;
-                            const hasExpired = h < currentHalf;
-                            
+                            const hasExpired = h < actualCurrentHalf;
+
                             if (isChecked) {
                                 redeemed += customAmount;
                                 const remaining = credit.amount - customAmount;
@@ -1243,11 +1214,11 @@
                             }
                         }
                     } else if (credit.freq === 'Annual' || credit.freq === 'Every 4 Years') {
-                        const stateKey = `Annual_${bank}_${displayName}_${credit.name}_${currentYear}`;
+                        const stateKey = `Annual_${bank}_${displayName}_${credit.name}_${actualCurrentYear}`;
                         const state = creditStates[stateKey];
                         const isChecked = state === true || (typeof state === 'number') || state === 'full';
                         const customAmount = (typeof state === 'number') ? state : credit.amount;
-                        
+
                         if (isChecked) {
                             redeemed += customAmount;
                             const remaining = credit.amount - customAmount;
@@ -1265,7 +1236,7 @@
 
             const totalCredits = available + redeemed + unused;
             const pacePercentage = totalCredits > 0 ? Math.round((redeemed / totalCredits) * 100) : 0;
-            
+
             document.getElementById('pacePercentage').textContent = pacePercentage;
             document.getElementById('paceAmount').textContent = redeemed;
             document.getElementById('totalCredits').textContent = totalCredits;
