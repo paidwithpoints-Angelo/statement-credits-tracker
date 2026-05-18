@@ -280,11 +280,32 @@
                 font-size: 24px;
             }
             .results-table {
-                font-size: 11px;
+                font-size: 10px;
+                display: block;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            .results-table thead,
+            .results-table tbody,
+            .results-table tr {
+                display: block;
             }
             .results-table th,
             .results-table td {
                 padding: 6px 4px;
+                display: inline-block;
+                width: auto;
+                min-width: 50px;
+            }
+            .results-table th:nth-child(1),
+            .results-table td:nth-child(1) {
+                width: 35px;
+                min-width: 35px;
+            }
+            .results-table th:nth-child(7),
+            .results-table td:nth-child(7) {
+                width: 60px;
+                min-width: 60px;
             }
             .add-btn {
                 padding: 10px 16px;
