@@ -326,13 +326,17 @@
             
             /* Wrap the entire monthly/quarterly/etc section */
             .results-section {
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
-                margin-bottom: 30px;
+                overflow-x: auto !important;
+                -webkit-overflow-scrolling: touch !important;
+                margin-bottom: 30px !important;
+                display: block !important;
+                width: 100% !important;
             }
             
             .results-section > .results-table {
-                min-width: 600px;
+                min-width: 650px !important;
+                display: table !important;
+                width: auto !important;
             }
             .results-table thead {
                 display: table;
