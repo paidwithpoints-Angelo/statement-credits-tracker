@@ -317,14 +317,22 @@
             .tally-amount {
                 font-size: 24px;
             }
+            /* Add scrollable wrapper around table on mobile */
             .results-table {
                 font-size: 10px;
-                display: block;
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
-                width: 100%;
                 border: 1px solid #e9ecef;
                 border-radius: 4px;
+            }
+            
+            /* Wrap the entire monthly/quarterly/etc section */
+            .results-section {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                margin-bottom: 30px;
+            }
+            
+            .results-section > .results-table {
+                min-width: 600px;
             }
             .results-table thead {
                 display: table;
@@ -988,7 +996,7 @@
             
             // Monthly
             if (creditsByFreq['Monthly'].length > 0) {
-                html += `<div style="margin-bottom: 30px;">
+                html += `<div class="results-section" style="margin-bottom: 30px;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                         <div style="background: #3498db; color: white; padding: 12px 20px; border-radius: 4px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; font-size: 13px; margin: 0;">MONTHLY</div>
                         <div style="display: flex; gap: 10px;">
@@ -1025,7 +1033,7 @@
 
             // Quarterly
             if (creditsByFreq['Quarterly'].length > 0) {
-                html += `<div style="margin-bottom: 30px;">
+                html += `<div class="results-section" style="margin-bottom: 30px;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                         <div style="background: #3498db; color: white; padding: 12px 20px; border-radius: 4px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; font-size: 13px; margin: 0;">QUARTERLY</div>
                         <div style="display: flex; gap: 10px;">
@@ -1062,7 +1070,7 @@
 
             // Semi-Annual
             if (creditsByFreq['Semi-Annual'].length > 0) {
-                html += `<div style="margin-bottom: 30px;">
+                html += `<div class="results-section" style="margin-bottom: 30px;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                         <div style="background: #3498db; color: white; padding: 12px 20px; border-radius: 4px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; font-size: 13px; margin: 0;">SEMI-ANNUAL</div>
                         <div style="display: flex; gap: 10px;">
@@ -1099,7 +1107,7 @@
 
             // Annual
             if (creditsByFreq['Annual'].length > 0) {
-                html += `<div style="margin-bottom: 30px;">
+                html += `<div class="results-section" style="margin-bottom: 30px;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                         <div style="background: #3498db; color: white; padding: 12px 20px; border-radius: 4px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; font-size: 13px; margin: 0;">ANNUAL</div>
                         <div style="display: flex; gap: 10px;">
