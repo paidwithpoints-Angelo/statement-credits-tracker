@@ -317,38 +317,22 @@
             .tally-amount {
                 font-size: 24px;
             }
-            /* Add scrollable wrapper around table on mobile */
             .results-table {
                 font-size: 10px;
-                border: 1px solid #e9ecef;
-                border-radius: 4px;
-            }
-            
-            /* Wrap the entire monthly/quarterly/etc section */
-            .results-section {
-                overflow-x: auto !important;
-                -webkit-overflow-scrolling: touch !important;
-                margin-bottom: 30px !important;
-                display: block !important;
-                width: 100% !important;
-            }
-            
-            .results-section > .results-table {
-                min-width: 650px !important;
-                display: table !important;
-                width: auto !important;
+                display: block;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                width: 100%;
             }
             .results-table thead {
                 display: table;
                 width: 100%;
                 table-layout: fixed;
-                min-width: 550px;
             }
             .results-table tbody {
                 display: table;
                 width: 100%;
                 table-layout: fixed;
-                min-width: 550px;
             }
             .results-table tr {
                 display: table-row;
@@ -392,10 +376,8 @@
                 text-align: center;
             }
             .remove-btn {
-                padding: 6px 8px;
-                font-size: 10px;
-                white-space: nowrap;
-                flex-shrink: 0;
+                padding: 6px 10px;
+                font-size: 11px;
             }
             .month-select select,
             .filter-section select {
@@ -612,7 +594,7 @@
                     { name: "Dining", amount: 300, freq: "Annual" },
                     { name: "StubHub/viagogo", amount: 300, freq: "Annual" },
                     { name: "Lyft", amount: 10, freq: "Monthly" },
-                    { name: "Peloton", amount: 120, freq: "Annual" },
+                    { name: "Peloton", amount: 10, freq: "Monthly" },
                     { name: "Apple TV+/Apple Music", amount: 250, freq: "Annual" },
                     { name: "Global Entry/TSA/NEXUS", amount: 120, freq: "Every 4 Years" }
                 ],
@@ -770,8 +752,7 @@
                 ],
                 "Venture X Business": [
                     { name: "Travel", amount: 300, freq: "Annual" },
-                    { name: "Global Entry/TSA PreCheck", amount: 120, freq: "Every 4 Years" },
-                    { name: "Anniversary Miles", amount: 100, freq: "Annual" }
+                    { name: "Global Entry/TSA PreCheck", amount: 120, freq: "Every 4 Years" }
                 ],
                 "Venture Business": [
                     { name: "Business Travel", amount: 50, freq: "Annual" },
@@ -1000,7 +981,7 @@
             
             // Monthly
             if (creditsByFreq['Monthly'].length > 0) {
-                html += `<div class="results-section" style="margin-bottom: 30px;">
+                html += `<div style="margin-bottom: 30px;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                         <div style="background: #3498db; color: white; padding: 12px 20px; border-radius: 4px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; font-size: 13px; margin: 0;">MONTHLY</div>
                         <div style="display: flex; gap: 10px;">
@@ -1037,7 +1018,7 @@
 
             // Quarterly
             if (creditsByFreq['Quarterly'].length > 0) {
-                html += `<div class="results-section" style="margin-bottom: 30px;">
+                html += `<div style="margin-bottom: 30px;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                         <div style="background: #3498db; color: white; padding: 12px 20px; border-radius: 4px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; font-size: 13px; margin: 0;">QUARTERLY</div>
                         <div style="display: flex; gap: 10px;">
@@ -1074,7 +1055,7 @@
 
             // Semi-Annual
             if (creditsByFreq['Semi-Annual'].length > 0) {
-                html += `<div class="results-section" style="margin-bottom: 30px;">
+                html += `<div style="margin-bottom: 30px;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                         <div style="background: #3498db; color: white; padding: 12px 20px; border-radius: 4px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; font-size: 13px; margin: 0;">SEMI-ANNUAL</div>
                         <div style="display: flex; gap: 10px;">
@@ -1111,7 +1092,7 @@
 
             // Annual
             if (creditsByFreq['Annual'].length > 0) {
-                html += `<div class="results-section" style="margin-bottom: 30px;">
+                html += `<div style="margin-bottom: 30px;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                         <div style="background: #3498db; color: white; padding: 12px 20px; border-radius: 4px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; font-size: 13px; margin: 0;">ANNUAL</div>
                         <div style="display: flex; gap: 10px;">
