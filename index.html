@@ -493,8 +493,8 @@
                     <select id="statusFilter" onchange="filterCredits()" style="padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; min-width: 140px;">
                         <option value="">All Credits</option>
                         <option value="available">Available</option>
-                        <option value="redeemed">Redeemed</option>
-                        <option value="unused">Unused</option>
+                        <option value="partial">Partially Used</option>
+                        <option value="redeemed">Fully Redeemed</option>
                     </select>
                 </div>
                 <div id="searchResults" style="display: none; margin-top: 15px; padding: 15px; background: #f5f5f5; border-radius: 4px; max-height: 400px; overflow-y: auto;">
@@ -2145,8 +2145,20 @@
                         stateKey = `Annual_${bank}_${displayName}_${credit.name}_${currentYear}`;
                     }
 
-                    const isChecked = creditStates[stateKey] === true;
-                    let status = isChecked ? 'redeemed' : 'available';
+                    const stateValue = creditStates[stateKey];
+                    let status = 'available';
+                    let redeemedAmount = null;
+
+                    if (stateValue === true || stateValue === 'full') {
+                        status = 'redeemed';
+                        redeemedAmount = credit.amount;
+                    } else if (typeof stateValue === 'number' && stateValue > 0 && stateValue < credit.amount) {
+                        status = 'partial';
+                        redeemedAmount = stateValue;
+                    } else if (typeof stateValue === 'number' && stateValue === credit.amount) {
+                        status = 'redeemed';
+                        redeemedAmount = stateValue;
+                    }
 
                     allCredits.push({
                         bank,
@@ -2154,7 +2166,8 @@
                         creditName: credit.name,
                         amount: credit.amount,
                         freq: credit.freq,
-                        status: status
+                        status: status,
+                        redeemedAmount: redeemedAmount
                     });
                 });
             });
@@ -2185,7 +2198,17 @@
             }
 
             resultsDiv.style.display = 'block';
-            resultsBody.innerHTML = filtered.map(c => `
+            resultsBody.innerHTML = filtered.map(c => {
+                let statusBadge = '';
+                if (c.status === 'redeemed') {
+                    statusBadge = `<span style="display: inline-block; padding: 3px 8px; border-radius: 3px; font-size: 11px; font-weight: 600; background: #27ae60; color: white;">✓ Redeemed $${c.redeemedAmount}</span>`;
+                } else if (c.status === 'partial') {
+                    statusBadge = `<span style="display: inline-block; padding: 3px 8px; border-radius: 3px; font-size: 11px; font-weight: 600; background: #f39c12; color: white;">⚠ $${c.redeemedAmount} of $${c.amount}</span>`;
+                } else {
+                    statusBadge = `<span style="display: inline-block; padding: 3px 8px; border-radius: 3px; font-size: 11px; font-weight: 600; background: #3498db; color: white;">○ Available</span>`;
+                }
+                
+                return `
                 <tr style="border-bottom: 1px solid #ddd;">
                     <td style="padding: 8px;"><strong>${c.bank}</strong></td>
                     <td style="padding: 8px;">${c.displayName}</td>
@@ -2193,12 +2216,11 @@
                     <td style="padding: 8px; text-align: center; font-size: 12px;">${c.freq}</td>
                     <td style="padding: 8px; text-align: right; font-weight: 600;">$${c.amount}</td>
                     <td style="padding: 8px; text-align: center;">
-                        <span style="display: inline-block; padding: 3px 8px; border-radius: 3px; font-size: 11px; font-weight: 600; background: ${c.status === 'redeemed' ? '#27ae60' : '#3498db'}; color: white;">
-                            ${c.status === 'redeemed' ? 'Redeemed' : 'Available'}
-                        </span>
+                        ${statusBadge}
                     </td>
                 </tr>
-            `).join('');
+                `;
+            }).join('');
             
             resultsInfo.innerHTML = `Showing ${filtered.length} result${filtered.length !== 1 ? 's' : ''}`;
         }
