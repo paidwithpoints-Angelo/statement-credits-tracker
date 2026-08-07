@@ -585,6 +585,171 @@
             "Bank of America": ["Premium Rewards", "Premium Rewards Elite"]
         };
 
+        // ─── CROSS-DEVICE SYNC INFRASTRUCTURE ─────────────────────────────────────────
+        // creditStates stored in-memory (_creditStates) and synced to the PWP dashboard API
+        // Cards also synced to API. Config (dashboardUrl + apiKey) stored in localStorage.
+        window._creditStates = {};
+        window._trackerConfig = null;
+        window._syncEnabled = false;
+
+        function pwpTrackerConfig() {
+            try { return JSON.parse(localStorage.getItem('pwp_tracker_config') || 'null'); }
+            catch(e) { return null; }
+        }
+
+        async function pwpApi(path, method, body) {
+            const cfg = window._trackerConfig;
+            if (!cfg) throw new Error('No tracker config');
+            const opts = {
+                method: method || 'GET',
+                headers: { 'Content-Type': 'application/json', 'x-tracker-key': cfg.key }
+            };
+            if (body) opts.body = JSON.stringify(body);
+            const r = await fetch(cfg.url + path, opts);
+            if (!r.ok) throw new Error(`API ${method} ${path} → ${r.status}`);
+            return r.json();
+        }
+
+        async function syncLoadAll() {
+            try {
+                const data = await pwpApi('/api/owner/my-cards', 'GET');
+                window._creditStates = {};
+                (data.usage || []).forEach(u => {
+                    // Derive freq from period_key format
+                    let freq = 'Monthly';
+                    if (/^Q\d$/.test(u.period_key)) freq = 'Quarterly';
+                    else if (/^H\d$/.test(u.period_key)) freq = 'Semi-Annual';
+                    else if (/^\d{4}$/.test(u.period_key)) freq = 'Annual';
+                    const key = `${freq}_${u.bank}_${u.card_name}_${u.credit_name}_${u.period_key}`;
+                    window._creditStates[key] = u.amount_used; // numeric value
+                });
+                return data.cards || [];
+            } catch(e) {
+                console.warn('[PWP Sync] Load failed:', e.message);
+                return null;
+            }
+        }
+
+        function loadCardsFromApi(cards) {
+            // Clear existing rows
+            document.querySelectorAll('#cardsBody tr').forEach(r => r.remove());
+            cards.forEach(({bank, card_name, nickname, annual_fee}) => {
+                addCard();
+                const rows = document.querySelectorAll('#cardsBody tr');
+                const lastRow = rows[rows.length - 1];
+                const selects = lastRow.querySelectorAll('select');
+                const textInput = lastRow.querySelector('input[type="text"]');
+                const numberInput = lastRow.querySelector('input[type="number"]');
+                selects[0].value = bank;
+                updateCardOptions(lastRow);
+                selects[1].value = card_name;
+                if (textInput) textInput.value = nickname || '';
+                if (numberInput) numberInput.value = annual_fee || 0;
+            });
+        }
+
+        async function saveCardsToApi() {
+            if (!window._syncEnabled) return;
+            const rows = document.querySelectorAll('#cardsBody tr');
+            const domCards = [];
+            rows.forEach(row => {
+                const selects = row.querySelectorAll('select');
+                const inputs = row.querySelectorAll('input');
+                const bank = selects[0] ? selects[0].value : '';
+                const card_name = selects[1] ? selects[1].value : '';
+                const nickname = inputs[0] ? inputs[0].value : '';
+                const annual_fee = inputs[1] ? parseInt(inputs[1].value) || 0 : 0;
+                if (bank && card_name) domCards.push({bank, card_name, nickname, annual_fee});
+            });
+            try {
+                const data = await pwpApi('/api/owner/my-cards', 'GET');
+                const existing = data.cards || [];
+                // Delete cards removed from DOM
+                for (const ec of existing) {
+                    const stillPresent = domCards.find(d => d.bank === ec.bank && d.card_name === ec.card_name);
+                    if (!stillPresent) await pwpApi(`/api/owner/my-cards/${ec.id}`, 'DELETE').catch(()=>{});
+                }
+                // Add new cards or update changed nickname/annual_fee
+                for (const dc of domCards) {
+                    const ex = existing.find(e => e.bank === dc.bank && e.card_name === dc.card_name);
+                    if (!ex) {
+                        await pwpApi('/api/owner/my-cards', 'POST', dc).catch(()=>{});
+                    } else if (ex.nickname !== dc.nickname || ex.annual_fee !== dc.annual_fee) {
+                        await pwpApi(`/api/owner/my-cards/${ex.id}`, 'PUT', dc).catch(()=>{});
+                    }
+                }
+            } catch(e) {
+                console.warn('[PWP Sync] saveCardsToApi failed:', e.message);
+            }
+        }
+
+        async function syncCreditState(stateKey, stateValue, fullAmount) {
+            if (!window._syncEnabled) return;
+            const parts = stateKey.split('_');
+            if (parts.length < 5) return;
+            const [freq, bank, card_name, credit_name, period_key] = parts;
+            let amount_used = 0;
+            if (stateValue === false) amount_used = 0;
+            else if (stateValue === 'full') amount_used = parseInt(fullAmount) || 0;
+            else amount_used = parseInt(stateValue) || 0;
+            try {
+                await pwpApi('/api/owner/my-credit-usage', 'POST', {bank, card_name, credit_name, period_key, amount_used});
+            } catch(e) {
+                console.warn('[PWP Sync] syncCreditState failed:', e.message);
+            }
+        }
+
+        function showSyncSetupModal() {
+            const existing = document.getElementById('pwpSyncModal');
+            if (existing) { existing.style.display = 'flex'; return; }
+            const modal = document.createElement('div');
+            modal.id = 'pwpSyncModal';
+            modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:9999;display:flex;align-items:center;justify-content:center;';
+            modal.innerHTML = `
+                <div style="background:#fff;border-radius:12px;padding:2rem;max-width:440px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+                    <h2 style="margin:0 0 0.5rem;font-size:1.25rem;">⚙️ Connect to Dashboard</h2>
+                    <p style="margin:0 0 1.5rem;color:#666;font-size:0.9rem;line-height:1.5;">Enter your dashboard URL and API key to sync your tracker data across all devices.</p>
+                    <label style="display:block;margin-bottom:1rem;">
+                        <span style="font-size:0.85rem;font-weight:600;color:#333;">Dashboard URL</span>
+                        <input id="pwpSyncUrl" type="url" placeholder="https://paidwithpoints-dashboard.onrender.com"
+                            style="display:block;width:100%;margin-top:4px;padding:8px 10px;border:1px solid #ddd;border-radius:6px;font-size:0.9rem;box-sizing:border-box;">
+                    </label>
+                    <label style="display:block;margin-bottom:1.5rem;">
+                        <span style="font-size:0.85rem;font-weight:600;color:#333;">Tracker API Key</span>
+                        <input id="pwpSyncKey" type="password" placeholder="your-secret-key"
+                            style="display:block;width:100%;margin-top:4px;padding:8px 10px;border:1px solid #ddd;border-radius:6px;font-size:0.9rem;box-sizing:border-box;">
+                    </label>
+                    <p id="pwpSyncError" style="color:#e53e3e;font-size:0.85rem;margin:0 0 1rem;display:none;"></p>
+                    <div style="display:flex;gap:0.75rem;justify-content:flex-end;">
+                        <button onclick="document.getElementById('pwpSyncModal').style.display='none'"
+                            style="padding:8px 16px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.9rem;">Cancel</button>
+                        <button onclick="saveSyncConfig()"
+                            style="padding:8px 16px;background:#3498db;color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:600;font-size:0.9rem;">Connect</button>
+                    </div>
+                </div>`;
+            document.body.appendChild(modal);
+        }
+
+        async function saveSyncConfig() {
+            const url = document.getElementById('pwpSyncUrl').value.trim().replace(/\/$/, '');
+            const key = document.getElementById('pwpSyncKey').value.trim();
+            const errEl = document.getElementById('pwpSyncError');
+            if (!url || !key) { errEl.textContent = 'Both fields are required.'; errEl.style.display='block'; return; }
+            // Test the connection
+            try {
+                const r = await fetch(url + '/api/owner/my-cards', {
+                    headers: { 'x-tracker-key': key }
+                });
+                if (!r.ok) throw new Error(`Server returned ${r.status}`);
+                localStorage.setItem('pwp_tracker_config', JSON.stringify({url, key}));
+                window.location.reload();
+            } catch(e) {
+                errEl.textContent = `Connection failed: ${e.message}`;
+                errEl.style.display = 'block';
+            }
+        }
+        // ───────────────────────────────────────────────────────────────────────────────
+
         const creditData = {
             "Chase": {
                 "Sapphire Reserve": [
@@ -873,6 +1038,8 @@
                 }
             });
             localStorage.setItem('cards', JSON.stringify(cards));
+            // Sync to API (fire-and-forget)
+            saveCardsToApi();
         }
 
         function loadCards() {
@@ -1135,7 +1302,7 @@
             const currentQuarter = Math.floor(currentMonthIndex / 3);
             const currentHalf = currentMonthIndex < 6 ? 1 : 2;
             const currentYear = new Date().getFullYear();
-            const creditStates = JSON.parse(localStorage.getItem('creditStates') || '{}');
+            const creditStates = window._creditStates;
 
             // Get all cards to check their credits
             const restoreRows = document.querySelectorAll('#cardsBody tr');
@@ -1333,7 +1500,7 @@
             });
 
             const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-            const creditStates = JSON.parse(localStorage.getItem('creditStates') || '{}');
+            const creditStates = window._creditStates;
             const expiringCredits = [];
 
             cards.forEach(({bank, card, nickname}) => {
@@ -1476,7 +1643,7 @@
                 }
             });
 
-            const creditStates = JSON.parse(localStorage.getItem('creditStates') || '{}');
+            const creditStates = window._creditStates;
             const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
             
             let csv = 'Bank,Card,Nickname,Annual Fee,Credit Name,Amount,Frequency,Status\n';
@@ -1543,7 +1710,7 @@
                 }
             });
 
-            const creditStates = JSON.parse(localStorage.getItem('creditStates') || '{}');
+            const creditStates = window._creditStates;
             const exportData = {
                 exportDate: new Date().toISOString(),
                 cards: cards,
@@ -1570,7 +1737,7 @@
                 }
             });
 
-            const creditStates = JSON.parse(localStorage.getItem('creditStates') || '{}');
+            const creditStates = window._creditStates;
             const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
             const currentYear = new Date().getFullYear();
 
@@ -1624,9 +1791,18 @@
         function resetAllData() {
             const confirmed = confirm('Are you sure you want to reset all data? This will clear all checked credits and start fresh for the new year. This cannot be undone!');
             if (confirmed) {
-                // Clear all credit states from localStorage
+                // Clear all credit states from localStorage and in-memory
                 localStorage.removeItem('creditStates');
                 localStorage.removeItem('cards');
+                // Clear in-memory state
+                window._creditStates = {};
+                // Clear API data (fire-and-forget)
+                if (window._syncEnabled) {
+                    pwpApi('/api/owner/my-cards', 'GET').then(data => {
+                        const cards = data.cards || [];
+                        cards.forEach(c => pwpApi(`/api/owner/my-cards/${c.id}`, 'DELETE').catch(()=>{}));
+                    }).catch(()=>{});
+                }
                 
                 // Clear the cards from display
                 const tbody = document.getElementById('cardsBody');
@@ -1674,7 +1850,7 @@
 
             // Save all current checkbox states
             const allCheckboxes = document.querySelectorAll('.results-table input[type="checkbox"]');
-            const creditStates = JSON.parse(localStorage.getItem('creditStates') || '{}');
+            const creditStates = window._creditStates;
             
             allCheckboxes.forEach(checkbox => {
                 const row = checkbox.closest('tr');
@@ -1694,10 +1870,11 @@
                     stateKey = `Annual_${bankCell}_${cardCell}_${creditCell}_${currentMonth}`;
                 }
                 
-                creditStates[stateKey] = checkbox.checked;
+                const _isChecked = checkbox.checked;
+                const _fullAmt = parseInt(checkbox.getAttribute('data-amount')) || 0;
+                window._creditStates[stateKey] = _isChecked;
+                if (stateKey) syncCreditState(stateKey, _isChecked, _fullAmt);
             });
-            
-            localStorage.setItem('creditStates', JSON.stringify(creditStates));
             
             // Show confirmation message
             const button = event.target;
@@ -1789,7 +1966,7 @@
                 }
             });
 
-            const creditStates = JSON.parse(localStorage.getItem('creditStates') || '{}');
+            const creditStates = window._creditStates;
             const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
             let cardHistories = [];
@@ -1955,7 +2132,7 @@
                 }
             });
 
-            const creditStates = JSON.parse(localStorage.getItem('creditStates') || '{}');
+            const creditStates = window._creditStates;
             const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
             const currentYear = new Date().getFullYear();
 
@@ -2107,7 +2284,7 @@
         function filterCredits() {
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
             const statusFilter = document.getElementById('statusFilter').value;
-            const creditStates = JSON.parse(localStorage.getItem('creditStates') || '{}');
+            const creditStates = window._creditStates;
             const monthSelect = document.getElementById('month');
             const currentMonthIndex = monthSelect.selectedIndex;
             const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -2268,9 +2445,10 @@
                 stateKey = `Annual_${bankCell}_${cardCell}_${creditCell}_${currentYear}`;
             }
             
-            const creditStates = JSON.parse(localStorage.getItem('creditStates') || '{}');
-            creditStates[stateKey] = stateValue;
-            localStorage.setItem('creditStates', JSON.stringify(creditStates));
+            window._creditStates[stateKey] = stateValue;
+            // Determine fullAmount for API sync (needed when stateValue === 'full')
+            const _fullAmtForSync = parseInt(amountInput && amountInput.value ? amountInput.value : (checkbox ? checkbox.getAttribute('data-amount') : 0)) || 0;
+            syncCreditState(stateKey, stateValue, _fullAmtForSync);
         }
 
         function updateTallies() {
@@ -2311,13 +2489,13 @@
                     stateKey = `Annual_${bankCell}_${cardCell}_${creditCell}_${currentYear}`;
                 }
                 
-                const creditStates = JSON.parse(localStorage.getItem('creditStates') || '{}');
-                creditStates[stateKey] = checkbox.checked ? (customAmount || 'full') : false;
-                localStorage.setItem('creditStates', JSON.stringify(creditStates));
+                const _stateVal = checkbox.checked ? (customAmount || 'full') : false;
+                window._creditStates[stateKey] = _stateVal;
+                syncCreditState(stateKey, _stateVal, customAmount || parseInt(checkbox.getAttribute('data-amount')) || 0);
             });
 
             // Get all cards
-            const creditStates = JSON.parse(localStorage.getItem('creditStates') || '{}');
+            const creditStates = window._creditStates;
             const rows = document.querySelectorAll('#cardsBody tr');
             const cards = [];
             rows.forEach(row => {
@@ -2436,7 +2614,7 @@
         }
 
         // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', async function() {
             updateCurrentDate();
             
             // Set month dropdown to current month
@@ -2444,7 +2622,32 @@
             const currentMonth = today.getMonth(); // 0-11
             const monthSelect = document.getElementById('month');
             monthSelect.selectedIndex = currentMonth;
-            
+
+            // Inject sync status badge into header
+            injectSyncBadge();
+
+            // Try API sync if configured
+            const cfg = pwpTrackerConfig();
+            if (cfg) {
+                window._trackerConfig = cfg;
+                window._syncEnabled = true;
+                updateSyncBadge('loading');
+                const apiCards = await syncLoadAll();
+                if (apiCards !== null) {
+                    updateSyncBadge('connected');
+                    if (apiCards.length === 0) addCard();
+                    else loadCardsFromApi(apiCards);
+                    updateResults();
+                    checkExpiringCredits();
+                    return;
+                } else {
+                    // API failed — fallback to localStorage
+                    window._syncEnabled = false;
+                    updateSyncBadge('error');
+                }
+            }
+
+            // Fallback: load from localStorage
             const saved = localStorage.getItem('cards');
             if (!saved || JSON.parse(saved).length === 0) {
                 addCard();
@@ -2453,6 +2656,29 @@
             updateResults();
             checkExpiringCredits();
         });
+
+        function injectSyncBadge() {
+            // Add sync status badge + settings button to page header
+            const header = document.querySelector('header') || document.querySelector('.header') || document.querySelector('h1');
+            if (!header) return;
+            const badge = document.createElement('div');
+            badge.id = 'pwpSyncBadge';
+            badge.style.cssText = 'position:fixed;top:12px;right:12px;z-index:1000;display:flex;align-items:center;gap:8px;';
+            badge.innerHTML = `
+                <span id="pwpSyncStatus" style="font-size:12px;padding:4px 10px;border-radius:20px;font-weight:600;background:#e2e8f0;color:#718096;cursor:default;">⚙️ Not synced</span>
+                <button onclick="showSyncSetupModal()" title="Configure cross-device sync"
+                    style="font-size:11px;padding:4px 8px;border-radius:6px;background:#fff;border:1px solid #ddd;cursor:pointer;color:#555;">⚙️ Sync</button>`;
+            document.body.appendChild(badge);
+        }
+
+        function updateSyncBadge(state) {
+            const el = document.getElementById('pwpSyncStatus');
+            if (!el) return;
+            if (state === 'connected') { el.textContent = '🟢 Synced'; el.style.background='#c6f6d5'; el.style.color='#276749'; }
+            else if (state === 'loading')  { el.textContent = '🔄 Syncing…'; el.style.background='#bee3f8'; el.style.color='#2a69ac'; }
+            else if (state === 'error')    { el.textContent = '🔴 Sync error'; el.style.background='#fed7d7'; el.style.color='#9b2c2c'; }
+            else                           { el.textContent = '⚙️ Not synced'; el.style.background='#e2e8f0'; el.style.color='#718096'; }
+        }
 
         // Update card options when bank changes
         document.addEventListener('change', function(e) {
