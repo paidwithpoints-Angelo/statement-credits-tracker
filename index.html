@@ -2654,7 +2654,7 @@
                     const pu = p.get('url'), pk = p.get('key');
                     if (pu && pk) {
                         localStorage.setItem('pwp_tracker_config', JSON.stringify({url: pu, key: pk}));
-                        window.history.replaceState({}, '', window.location.pathname);
+                        // Intentionally keep params in URL so bookmarks stay pre-authenticated
                     }
                 } catch(e) {}
             })();
