@@ -722,6 +722,13 @@
                             style="display:block;width:100%;margin-top:4px;padding:8px 10px;border:1px solid #ddd;border-radius:6px;font-size:0.9rem;box-sizing:border-box;">
                     </label>
                     <p id="pwpSyncError" style="color:#e53e3e;font-size:0.85rem;margin:0 0 1rem;display:none;"></p>
+                    <div id="pwpMobileLinkRow" style="display:none;margin-bottom:1rem;padding:10px 12px;background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;">
+                        <p style="margin:0 0 8px;font-size:0.82rem;color:#0369a1;font-weight:600;">📱 Mobile sync link</p>
+                        <p style="margin:0 0 8px;font-size:0.8rem;color:#555;line-height:1.4;">Copy this link and bookmark it on your mobile browser. Opening it will automatically reconnect your tracker.</p>
+                        <button onclick="pwpCopyMobileLink()"
+                            style="width:100%;padding:8px 14px;background:#0ea5e9;color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:600;font-size:0.85rem;">📋 Copy mobile link</button>
+                        <p id="pwpMobileLinkCopied" style="margin:6px 0 0;font-size:0.8rem;color:#16a34a;display:none;">✅ Copied to clipboard!</p>
+                    </div>
                     <div style="display:flex;gap:0.75rem;justify-content:flex-end;">
                         <button onclick="document.getElementById('pwpSyncModal').style.display='none'"
                             style="padding:8px 16px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.9rem;">Cancel</button>
@@ -730,6 +737,29 @@
                     </div>
                 </div>`;
             document.body.appendChild(modal);
+            // If already configured, pre-fill fields and show mobile link row
+            const _cfg = pwpTrackerConfig();
+            if (_cfg) {
+                const urlInp = document.getElementById('pwpSyncUrl');
+                const keyInp = document.getElementById('pwpSyncKey');
+                if (urlInp) urlInp.value = _cfg.url || '';
+                if (keyInp) keyInp.value = _cfg.key || '';
+                const mobileRow = document.getElementById('pwpMobileLinkRow');
+                if (mobileRow) mobileRow.style.display = '';
+            }
+        }
+
+        function pwpCopyMobileLink() {
+            const cfg = pwpTrackerConfig();
+            if (!cfg) return;
+            const link = window.location.origin + window.location.pathname +
+                '?url=' + encodeURIComponent(cfg.url) + '&key=' + encodeURIComponent(cfg.key);
+            navigator.clipboard.writeText(link).then(function() {
+                const copied = document.getElementById('pwpMobileLinkCopied');
+                if (copied) { copied.style.display = ''; setTimeout(function() { copied.style.display = 'none'; }, 3000); }
+            }).catch(function() {
+                prompt('Copy this link:', link);
+            });
         }
 
         async function saveSyncConfig() {
@@ -2617,6 +2647,18 @@
 
         // Initialize
         document.addEventListener('DOMContentLoaded', async function() {
+            // Auto-configure from URL params (for mobile deep-link bookmarks)
+            (function() {
+                try {
+                    const p = new URLSearchParams(window.location.search);
+                    const pu = p.get('url'), pk = p.get('key');
+                    if (pu && pk) {
+                        localStorage.setItem('pwp_tracker_config', JSON.stringify({url: pu, key: pk}));
+                        window.history.replaceState({}, '', window.location.pathname);
+                    }
+                } catch(e) {}
+            })();
+
             updateCurrentDate();
             
             // Set month dropdown to current month
